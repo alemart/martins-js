@@ -1280,6 +1280,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#virtualsize" class="md-nav__link">
+    virtualSize
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#canvas" class="md-nav__link">
     canvas
   </a>
@@ -1287,8 +1294,49 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#virtualsize" class="md-nav__link">
-    virtualSize
+  <a href="#style" class="md-nav__link">
+    style
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fullscreen" class="md-nav__link">
+    fullscreen
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#methods" class="md-nav__link">
+    Methods
+  </a>
+  
+    <nav class="md-nav" aria-label="Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#requestfullscreen" class="md-nav__link">
+    requestFullscreen
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exitfullscreen" class="md-nav__link">
+    exitFullscreen
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isfullscreenavailable" class="md-nav__link">
+    isFullscreenAvailable
   </a>
   
 </li>
@@ -1622,6 +1670,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#virtualsize" class="md-nav__link">
+    virtualSize
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#canvas" class="md-nav__link">
     canvas
   </a>
@@ -1629,8 +1684,49 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#virtualsize" class="md-nav__link">
-    virtualSize
+  <a href="#style" class="md-nav__link">
+    style
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fullscreen" class="md-nav__link">
+    fullscreen
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#methods" class="md-nav__link">
+    Methods
+  </a>
+  
+    <nav class="md-nav" aria-label="Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#requestfullscreen" class="md-nav__link">
+    requestFullscreen
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exitfullscreen" class="md-nav__link">
+    exitFullscreen
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isfullscreenavailable" class="md-nav__link">
+    isFullscreenAvailable
   </a>
   
 </li>
@@ -1699,7 +1795,7 @@
 
 
 <h1 id="viewport">Viewport</h1>
-<p>The viewport is the area of the web page in which the augmented scene will be displayed.</p>
+<p>The viewport is the area of the web page in which the augmented scene is displayed.</p>
 <h2 id="instantiation">Instantiation</h2>
 <h3 id="martinsviewport">Martins.Viewport</h3>
 <p><code>Martins.Viewport(settings: object): Viewport</code></p>
@@ -1711,6 +1807,7 @@
 <li><code>hudContainer: HTMLDivElement, optional</code>. An overlay that will be displayed in front of the augmented scene. It must be a direct child of <code>container</code> in the DOM tree.</li>
 <li><code>resolution: Resolution, optional</code>. The <a href="../resolution/">resolution</a> of the virtual scene.</li>
 <li><code>canvas: HTMLCanvasElement, optional</code>. An existing canvas on which the virtual scene will be drawn. The engine automatically creates a canvas. You should only specify an existing canvas if you must. Experimental.</li>
+<li><code>style: string, optional.</code> The <a href="#style">viewport style</a>. <em>Since:</em> 0.2.1</li>
 </ul>
 </li>
 </ul>
@@ -1732,20 +1829,73 @@
 <h3 id="resolution">resolution</h3>
 <p><code>viewport.resolution: Resolution, read-only</code></p>
 <p>The <a href="../resolution/">resolution</a> of the virtual scene.</p>
-<h3 id="canvas">canvas</h3>
-<p><code>viewport.canvas: HTMLCanvasElement, read-only</code></p>
-<p>A <code>&lt;canvas&gt;</code> on which the virtual scene is drawn.</p>
 <h3 id="virtualsize">virtualSize</h3>
 <p><code>viewport.virtualSize: SpeedySize, read-only</code></p>
 <p>The size in pixels that matches the <a href="#resolution">resolution</a> of the virtual scene.</p>
+<h3 id="canvas">canvas</h3>
+<p><code>viewport.canvas: HTMLCanvasElement, read-only</code></p>
+<p>A <code>&lt;canvas&gt;</code> on which the virtual scene is drawn.</p>
+<h3 id="style">style</h3>
+<p><code>viewport.style: string</code></p>
+<p>The style determines the way the viewport appears on the screen. Different styles are applicable to different <a href="../session/#mode">session modes</a>. The following are valid styles:</p>
+<ul>
+<li><code>"best-fit"</code>: an immersive viewport that is scaled in a way that covers the page while preserving the aspect ratio of the augmented scene.</li>
+<li><code>"stretch"</code>: an immersive viewport that is scaled in a way that covers the entire page, stretching the augmented scene if necessary.</li>
+<li><code>"inline"</code>: an inline viewport that follows the typical flow of a web page.</li>
+</ul>
+<p>The default style is <code>"best-fit"</code> in immersive mode, or <code>"inline"</code> in inline mode.</p>
+<p><em>Since:</em> 0.2.1</p>
+<h3 id="fullscreen">fullscreen</h3>
+<p><code>viewport.fullscreen: boolean, read-only</code></p>
+<p>Whether or not the viewport <a href="#container">container</a> is being displayed in fullscreen mode.</p>
+<p><em>Since:</em> 0.2.1</p>
+<h2 id="methods">Methods</h2>
+<h3 id="requestfullscreen">requestFullscreen</h3>
+<p><code>viewport.requestFullscreen(): SpeedyPromise&lt;void&gt;</code></p>
+<p>Make a request to the user agent so that the viewport <a href="#container">container</a> is displayed in fullscreen mode. The user must interact with the page (e.g., tap on a button) in order to comply with <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/requestFullscreen#security">browser policies</a>, otherwise the request will not succeed.</p>
+<div class="admonition info">
+<p class="admonition-title">iPhone support</p>
+<p>At the time of this writing, the fullscreen mode is <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/requestFullscreen#browser_compatibility">not supported on iPhone</a>. An alternative way to create a fullscreen experience is to set the viewport <a href="#style">style</a> to <code>"stretch"</code> in a <a href="https://developer.mozilla.org/en-US/docs/Web/Manifest/display">web app</a>.</p>
+</div>
+<p><em>Since:</em> 0.2.1</p>
+<p><strong>Returns</strong></p>
+<p>A promise that is resolved when the fullscreen mode is activated, or rejected on error.</p>
+<p><strong>Example</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kd">function</span> <span class="nx">toggleFullscreen</span><span class="p">()</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="p">{</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">viewport</span><span class="p">.</span><span class="nx">fullscreen</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>        <span class="nx">viewport</span><span class="p">.</span><span class="nx">requestFullscreen</span><span class="p">().</span><span class="k">catch</span><span class="p">(</span><span class="nx">err</span> <span class="p">=&gt;</span> <span class="p">{</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>            <span class="nx">alert</span><span class="p">(</span><span class="sb">`Can&#39;t enable fullscreen mode. `</span> <span class="o">+</span> <span class="nx">err</span><span class="p">.</span><span class="nx">toString</span><span class="p">());</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>        <span class="p">});</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="p">}</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="k">else</span> <span class="p">{</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>        <span class="nx">viewport</span><span class="p">.</span><span class="nx">exitFullscreen</span><span class="p">();</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="p">}</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="p">}</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1">// require user interaction</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="nx">button</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="nx">toggleFullscreen</span><span class="p">);</span>
+</code></pre></div>
+<h3 id="exitfullscreen">exitFullscreen</h3>
+<p><code>viewport.exitFullscreen(): SpeedyPromise&lt;void&gt;</code></p>
+<p>Exit fullscreen mode.</p>
+<p><em>Since:</em> 0.2.1</p>
+<p><strong>Returns</strong></p>
+<p>A promise that is resolved once the fullscreen mode is no longer active, or rejected on error. The promise will be rejected if the method is called when not in fullscreen mode.</p>
+<h3 id="isfullscreenavailable">isFullscreenAvailable</h3>
+<p><code>viewport.isFullscreenAvailable(): boolean</code></p>
+<p>Checks the availability of the fullscreen mode on the current platform and page.</p>
+<p><em>Since:</em> 0.2.1</p>
+<p><strong>Returns</strong></p>
+<p>Returns <code>true</code> if the fullscreen mode can be activated.</p>
 <h2 id="events">Events</h2>
 <p>A viewport is an <a href="../ar-event-target/">AREventTarget</a>. You can listen to the following events:</p>
 <h3 id="resize">resize</h3>
-<p>The viewport has been resized. This may happen when the user resizes the window of the web browser or when the mobile device is flipped.</p>
+<p>The viewport has been resized. This will happen when the user resizes the window of the web browser or when the mobile device is flipped.</p>
 <p><strong>Example</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nx">viewport</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;resize&#39;</span><span class="p">,</span> <span class="nx">event</span> <span class="p">=&gt;</span> <span class="p">{</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;The viewport has been resized.&#39;</span><span class="p">);</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="p">});</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nx">viewport</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;resize&#39;</span><span class="p">,</span> <span class="nx">event</span> <span class="p">=&gt;</span> <span class="p">{</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;The viewport has been resized.&#39;</span><span class="p">);</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="p">});</span>
 </code></pre></div>
 
               
