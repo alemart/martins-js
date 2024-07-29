@@ -5,7 +5,7 @@
  * https://github.com/alemart/martins-js
  *
  * @license LGPL-3.0-or-later
- * Date: 2024-07-16T00:44:39.450Z
+ * Date: 2024-07-29T00:26:10.319Z
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -20006,8 +20006,10 @@ class BaseViewport extends ViewportEventTarget {
             container.webkitRequestFullscreen();
             return new (speedy_vision_default()).Promise((resolve, reject) => {
                 setTimeout(() => {
-                    if (container === document.webkitFullscreenElement)
+                    if (container === document.webkitFullscreenElement) {
+                        Utils.log('Entering fullscreen mode...');
                         resolve();
+                    }
                     else
                         reject(new TypeError());
                 }, 100);
@@ -20020,7 +20022,10 @@ class BaseViewport extends ViewportEventTarget {
         return new (speedy_vision_default()).Promise((resolve, reject) => {
             container.requestFullscreen({
                 navigationUI: 'hide'
-            }).then(resolve, reject);
+            }).then(() => {
+                Utils.log('Entering fullscreen mode...');
+                resolve();
+            }, reject);
         });
     }
     /**
@@ -20038,16 +20043,24 @@ class BaseViewport extends ViewportEventTarget {
             doc.webkitExitFullscreen();
             return new (speedy_vision_default()).Promise((resolve, reject) => {
                 setTimeout(() => {
-                    if (doc.webkitFullscreenElement === null)
+                    if (doc.webkitFullscreenElement === null) {
+                        Utils.log('Exiting fullscreen mode...');
                         resolve();
+                    }
                     else
                         reject(new TypeError());
                 }, 100);
             });
         }
+        // error if not in fullscreen mode
+        if (document.fullscreenElement === null)
+            return speedy_vision_default().Promise.reject(new IllegalOperationError('Not in fullscreen mode'));
         // exit fullscreen
         return new (speedy_vision_default()).Promise((resolve, reject) => {
-            document.exitFullscreen().then(resolve, reject);
+            document.exitFullscreen().then(() => {
+                Utils.log('Exiting fullscreen mode...');
+                resolve();
+            }, reject);
         });
     }
     /** Is the fullscreen mode available? */
@@ -23420,18 +23433,14 @@ class ImageTrackerEvent extends AREvent {
 
 
 
-/** Number of samples we'll be keeping to help calibrate the camera */
-const INTRISICS_SAMPLES = 401; //201; //31; // odd number
-/** Whether or not to auto-calibrate the camera */
-const FOVY_AUTODETECT = false; //true;
-/** A guess of the vertical field-of-view of a generic camera, in degrees */
-const FOVY_GUESS = 45; //50; // will be part of the viewing frustum
+/** A guess of the horizontal field-of-view of a typical camera, in degrees */
+const HFOV_GUESS = 60; // https://developer.apple.com/library/archive/documentation/DeviceInformation/Reference/iOSDeviceCompatibility/Cameras/Cameras.html
 /** Number of iterations used to refine the estimated pose */
 const POSE_ITERATIONS = 30;
 /** Number of samples used in the rotation filter */
 const ROTATION_FILTER_SAMPLES = 10;
 /** Number of samples used in the translation filter */
-const TRANSLATION_FILTER_SAMPLES = 10;
+const TRANSLATION_FILTER_SAMPLES = 5;
 /** Convert degrees to radians */
 const DEG2RAD = 0.017453292519943295; // pi / 180
 /** Convert radians to degrees */
@@ -23446,31 +23455,6 @@ const FY = 4;
 const U0 = 6;
 /** Index of the vertical position of the principal point in the camera intrinsics matrix */
 const V0 = 7;
-/** Translation refinement: predefined buffers for efficiency */
-const TRANSLATION_REFINEMENT_BUFFERS = (() => {
-    const l = 1.0;
-    const x = [0, l, 0, -l, 0];
-    const y = [-l, 0, l, 0, 0];
-    const n = x.length;
-    return Object.freeze({
-        x, y,
-        a1: new Array(n),
-        a2: new Array(n),
-        a3: new Array(n),
-        m: new Array(3 * n * 3),
-        v: new Array(3 * n),
-        t: new Array(3),
-        r: new Array(3 * n),
-        c: new Array(3),
-        Mc: new Array(3 * n),
-    });
-})();
-/** Translation refinement: number of iterations */
-const TRANSLATION_REFINEMENT_ITERATIONS = 3; // 1; // 5;
-/** Translation refinement: number of samples */
-const TRANSLATION_REFINEMENT_SAMPLES = 5; // TRANSLATION_REFINEMENT_BUFFERS.x.length;
-/** Translation refinement: the triple of the number of samples */
-const TRANSLATION_REFINEMENT_SAMPLES_3X = 15; //3 * TRANSLATION_REFINEMENT_SAMPLES;
 /**
  * Camera model
  */
@@ -23481,10 +23465,8 @@ class CameraModel {
     constructor() {
         this._screenSize = speedy_vision_default().Size(0, 0);
         this._matrix = speedy_vision_default().Matrix.Eye(3, 4);
-        this._intrinsics = [1, 0, 0, 0, 1, 0, 0, 0, 1]; // identity matrix
-        this._extrinsics = [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0]; // no rotation & no translation [ R | t ] = [ I | 0 ]
-        this._f = (new Array(INTRISICS_SAMPLES)).fill(this._intrinsics[FY]);
-        this._fp = 0;
+        this._intrinsics = [1, 0, 0, 0, 1, 0, 0, 0, 1]; // 3x3 identity matrix
+        this._extrinsics = [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0]; // 3x4 matrix [ R | t ] = [ I | 0 ] no rotation & no translation
         this._partialRotationBuffer = [];
         this._translationBuffer = [];
     }
@@ -23500,8 +23482,7 @@ class CameraModel {
         this._screenSize.width = screenSize.width;
         this._screenSize.height = screenSize.height;
         // reset the model
-        this._resetIntrinsics();
-        this._resetExtrinsics();
+        this.reset();
         // log
         Utils.log(`Initializing the camera model...`);
     }
@@ -23543,18 +23524,13 @@ class CameraModel {
             Utils.warning(`Can't update the camera model using an invalid homography matrix`);
             return speedy_vision_default().Promise.resolve(this._matrix);
         }
-        // estimate the focal length (auto-calibration)
-        const f = this._estimateFocal(homography);
-        if (f > 0)
-            this._storeFocal(f);
-        //console.log(this.fovy * RAD2DEG);
         // estimate the pose
         const pose = this._estimatePose(homography);
-        this._storePose(pose);
+        this._extrinsics = pose.read();
         // compute the camera matrix
         const C = this.denormalizer();
         const K = speedy_vision_default().Matrix(3, 3, this._intrinsics);
-        const E = speedy_vision_default().Matrix(3, 4, this._extrinsics);
+        const E = pose; //Speedy.Matrix(3, 4, this._extrinsics);
         this._matrix.setToSync(K.times(E).times(C));
         //console.log("intrinsics -----------", K.toString());
         //console.log("matrix ----------------",this._matrix.toString());
@@ -23675,81 +23651,38 @@ class CameraModel {
      * Reset camera intrinsics
      */
     _resetIntrinsics() {
+        const cameraWidth = Math.max(this._screenSize.width, this._screenSize.height); // portrait?
         const u0 = this._screenSize.width / 2;
         const v0 = this._screenSize.height / 2;
-        const f = v0 / Math.tan(DEG2RAD * FOVY_GUESS / 2);
-        this._intrinsics[FX] = f;
-        this._intrinsics[FY] = f;
+        const fx = (cameraWidth / 2) / Math.tan(DEG2RAD * HFOV_GUESS / 2);
+        const fy = fx;
+        this._intrinsics[FX] = fx;
+        this._intrinsics[FY] = fy;
         this._intrinsics[U0] = u0;
         this._intrinsics[V0] = v0;
-        this._f.fill(this._intrinsics[FY]);
-        this._fp = 0;
     }
     /**
-     * Estimate the focal length
-     * @param homography valid homography
-     * @returns estimated focal length, or 0 on error
-     */
-    _estimateFocal(homography) {
-        // auto-detect the focal length?
-        if (!FOVY_AUTODETECT)
-            return 0;
-        // read the entries of the homography
-        const h = homography.read();
-        const h11 = h[0], h12 = h[3]; //, h13 = h[6];
-        const h21 = h[1], h22 = h[4]; //, h23 = h[7];
-        const h31 = h[2], h32 = h[5]; //, h33 = h[8];
-        // read the principal point
-        const u0 = this._intrinsics[U0];
-        const v0 = this._intrinsics[V0];
-        // estimate the focal length based on the orthogonality
-        // constraint r1'r2 = 0 of a rotation matrix
-        const f2 = -((h11 / h31 - u0) * (h12 / h32 - u0) + (h21 / h31 - v0) * (h22 / h32 - v0));
-        // can't estimate it?
-        if (f2 < 0)
-            return this._intrinsics[FY];
-        //return 0;
-        // done!
-        return Math.sqrt(f2);
-    }
-    /**
-     * Store an estimated focal length
-     * @param f estimated focal length
-     */
-    _storeFocal(f) {
-        // store the focal length
-        this._f[this._fp] = f;
-        this._fp = (this._fp + 1) % INTRISICS_SAMPLES;
-        // take the median of the estimated focal lengths
-        const sorted = this._f.concat([]).sort((a, b) => a - b);
-        const median = sorted[sorted.length >>> 1];
-        // update the intrinsics matrix
-        this._intrinsics[FX] = this._intrinsics[FY] = median;
-        /*
-        // test
-        const u0 = this._intrinsics[U0];
-        const v0 = this._intrinsics[V0];
-        const fovx = 2 * Math.atan(u0 / median) * RAD2DEG;
-        const fovy = 2 * Math.atan(v0 / median) * RAD2DEG;
-        console.log('---------------');
-        console.log("fov:",fovx,fovy);
-        console.log("f:",median);
-        */
-    }
-    /**
-     * Compute a normalized homography H' = K^(-1) * H for an
+     * Compute a normalized homography H^ = K^(-1) * H for an
      * ideal pinhole with f = 1 and principal point = (0,0)
      * @param homography homography H to be normalized
-     * @param f focal length
-     * @returns normalized homography H'
+     * @returns normalized homography H^
      */
-    _normalizeHomography(homography, f = this._intrinsics[FY]) {
+    _normalizeHomography(homography) {
         const h = homography.read();
         const u0 = this._intrinsics[U0];
         const v0 = this._intrinsics[V0];
-        const h11 = h[0] - u0 * h[2], h12 = h[3] - u0 * h[5], h13 = h[6] - u0 * h[8];
-        const h21 = h[1] - v0 * h[2], h22 = h[4] - v0 * h[5], h23 = h[7] - v0 * h[8];
-        const h31 = h[2] * f, h32 = h[5] * f, h33 = h[8] * f;
+        const fx = this._intrinsics[FX];
+        const fy = this._intrinsics[FY];
+        const u0fx = u0 / fx;
+        const v0fy = v0 / fy;
+        const h11 = h[0] / fx - u0fx * h[2], h12 = h[3] / fx - u0fx * h[5], h13 = h[6] / fx - u0fx * h[8];
+        const h21 = h[1] / fy - v0fy * h[2], h22 = h[4] / fy - v0fy * h[5], h23 = h[7] / fy - v0fy * h[8];
+        const h31 = h[2], h32 = h[5], h33 = h[8];
+        /*console.log([
+            h11, h21, h31,
+            h12, h22, h32,
+            h13, h23, h33,
+        ]);*/
         return speedy_vision_default().Matrix(3, 3, [
             h11, h21, h31,
             h12, h22, h32,
@@ -23766,53 +23699,70 @@ class CameraModel {
         const h11 = h[0], h12 = h[3], h13 = h[6];
         const h21 = h[1], h22 = h[4], h23 = h[7];
         const h31 = h[2], h32 = h[5], h33 = h[8];
-        // select the sign so that t3 = tz > 0
-        const sign = h33 >= 0 ? 1 : -1;
-        // compute the scale factor
-        const h1norm = Math.sqrt(h11 * h11 + h21 * h21 + h31 * h31);
-        const h2norm = Math.sqrt(h12 * h12 + h22 * h22 + h32 * h32);
-        //const scale = sign * 2 / (h1norm + h2norm);
-        //const scale = sign / h1norm;
-        //const scale = sign / h2norm;
-        const scale = sign / Math.max(h1norm, h2norm); // this seems to work. why?
-        // invalid homography?
-        if (Number.isNaN(scale))
-            return speedy_vision_default().Matrix(3, 3, (new Array(9)).fill(Number.NaN));
+        const h1norm2 = h11 * h11 + h21 * h21 + h31 * h31;
+        const h2norm2 = h12 * h12 + h22 * h22 + h32 * h32;
+        const h1norm = Math.sqrt(h1norm2);
+        const h2norm = Math.sqrt(h2norm2);
+        //const hnorm = (h1norm + h2norm) / 2;
+        //const hnorm = Math.sqrt(h1norm * h2norm);
+        const hnorm = Math.max(h1norm, h2norm); // this seems to work. why?
         // we expect h1norm to be approximately h2norm, but sometimes there is a lot of noise
         // if h1norm is not approximately h2norm, it means that the first two columns of
         // the normalized homography are not really encoding a rotation (up to a scale)
-        // what is causing this? does h3 (and h33) tell us anything about it?
-        // what about the intrinsics matrix? the principal point...? the fov...?
         //console.log("h1,h2",h1norm,h2norm);
         //console.log(normalizedHomography.toString());
-        // recover the translation and the rotation
-        const t1 = scale * h13;
-        const t2 = scale * h23;
-        const t3 = scale * h33;
-        const r11 = scale * h11;
-        const r21 = scale * h21;
-        const r31 = scale * h31;
-        const r12 = scale * h12;
-        const r22 = scale * h22;
-        const r32 = scale * h32;
-        // refine the pose
-        const r = this._refineRotation(r11, r21, r31, r12, r22, r32);
-        const t = this._refineTranslation(normalizedHomography, r, [t1, t2, t3]);
-        //const t = [t1, t2, t3]; // faster, but less accurate
+        // compute a rough estimate for the scale factor
+        // select the sign so that t3 = tz > 0
+        const sign = h33 >= 0 ? 1 : -1;
+        let scale = sign / hnorm;
+        // sanity check
+        if (Number.isNaN(scale))
+            return speedy_vision_default().Matrix(3, 3, (new Array(9)).fill(Number.NaN));
+        // recover the rotation
+        let r = new Array(6);
+        r[0] = scale * h11;
+        r[1] = scale * h21;
+        r[2] = scale * h31;
+        r[3] = scale * h12;
+        r[4] = scale * h22;
+        r[5] = scale * h32;
+        // refine the rotation
+        r = this._refineRotation(r); // r is initially noisy
+        /*
+
+        After refining the rotation vectors, let's adjust the scale factor as
+        follows:
+
+        We know that [ r1 | r2 | t ] is equal to the normalized homography H up
+        to a non-zero scale factor s, i.e., [ r1 | r2 | t ] = s H. Let's call M
+        the first two columns of H, i.e., M = [ h1 | h2 ], and R = [ r1 | r2 ].
+        It follows that R = s M, meaning that M'R = s M'M. The trace of 2x2 M'R
+        is such that tr(M'R) = tr(s M'M) = s tr(M'M), which means:
+
+        s = tr(M'R) / tr(M'M) = (r1'h1 + r2'h2) / (h1'h1 + h2'h2)
+
+        (also: s^2 = det(M'R) / det(M'M))
+
+        */
+        // adjust the scale factor
+        scale = r[0] * h11 + r[1] * h21 + r[2] * h31;
+        scale += r[3] * h12 + r[4] * h22 + r[5] * h32;
+        scale /= h1norm2 + h2norm2;
+        // recover the translation
+        let t = new Array(3);
+        t[0] = scale * h13;
+        t[1] = scale * h23;
+        t[2] = scale * h33;
         // done!
-        return speedy_vision_default().Matrix(3, 3, r.concat(t)); // this is possibly NaN... why? homography...
+        return speedy_vision_default().Matrix(3, 3, r.concat(t));
     }
     /**
      * Make two non-zero and non-parallel input vectors, r1 and r2, orthonormal
-     * @param r11 x of r1
-     * @param r21 y of r1
-     * @param r31 z of r1
-     * @param r12 x of r2
-     * @param r22 y of r2
-     * @param r32 z of r2
+     * @param rot rotation vectors [ r1 | r2 ] in column-major format
      * @returns a 3x2 matrix R such that R'R = I (column-major format)
      */
-    _refineRotation(r11, r21, r31, r12, r22, r32) {
+    _refineRotation(rot) {
+        const [r11, r21, r31, r12, r22, r32] = rot;
         /*
 
         A little technique I figured out to correct the rotation vectors
@@ -23925,10 +23875,6 @@ class CameraModel {
         above observation. H, r1, r2 are known.
 
         */
-        const B = TRANSLATION_REFINEMENT_BUFFERS;
-        const n = TRANSLATION_REFINEMENT_SAMPLES;
-        const n3 = TRANSLATION_REFINEMENT_SAMPLES_3X;
-        Utils.assert(B.x.length === n);
         const h = normalizedHomography.read();
         const h11 = h[0], h12 = h[3], h13 = h[6];
         const h21 = h[1], h22 = h[4], h23 = h[7];
@@ -23936,17 +23882,32 @@ class CameraModel {
         const r11 = rot[0], r12 = rot[3];
         const r21 = rot[1], r22 = rot[4];
         const r31 = rot[2], r32 = rot[5];
-        // get sample points (xi, yi), 0 <= i < n
-        const x = B.x, y = B.y;
+        // sample points [ xi  yi ]' in AR screen space
+        //const x = [ 0.5, 0.0, 1.0, 1.0, 0.0, 0.5, 1.0, 0.5, 0.0 ];
+        //const y = [ 0.5, 0.0, 0.0, 1.0, 1.0, 0.0, 0.5, 1.0, 0.5 ];
+        const x = [0.5, 0.0, 1.0, 1.0, 0.0];
+        const y = [0.5, 0.0, 0.0, 1.0, 1.0];
+        const n = x.length;
+        const n3 = 3 * n;
+        const width = this._screenSize.width;
+        const height = this._screenSize.height;
+        for (let i = 0; i < n; i++) {
+            x[i] *= width;
+            y[i] *= height;
+        }
         // set auxiliary values: ai = H [ xi  yi  1 ]'
-        const a1 = B.a1, a2 = B.a2, a3 = B.a3;
+        const a1 = new Array(n);
+        const a2 = new Array(n);
+        const a3 = new Array(n);
         for (let i = 0; i < n; i++) {
             a1[i] = x[i] * h11 + y[i] * h12 + h13;
             a2[i] = x[i] * h21 + y[i] * h22 + h23;
             a3[i] = x[i] * h31 + y[i] * h32 + h33;
         }
-        // solve M t = v for t; M: 3n x 3, v: 3n x 1, t: 3 x 1 (linear least squares)
-        const m = B.m, v = B.v;
+        // we'll solve M t = v for t with linear least squares
+        // M: 3n x 3, v: 3n x 1, t: 3 x 1
+        const m = new Array(3 * n * 3);
+        const v = new Array(3 * n);
         for (let i = 0, k = 0; k < n; i += 3, k++) {
             m[i] = m[i + n3 + 1] = m[i + n3 + n3 + 2] = 0;
             m[i + n3] = -(m[i + 1] = a3[k]);
@@ -24003,14 +23964,20 @@ class CameraModel {
         where c = A'r = A'(Ax - b)
 
         */
+        // gradient descent: super lightweight implementation
+        const r = new Array(3 * n);
+        const c = new Array(3);
+        const Mc = new Array(3 * n);
         // initial guess
-        const t = B.t;
+        const t = new Array(3);
         t[0] = t0[0];
         t[1] = t0[1];
         t[2] = t0[2];
-        // gradient descent: super lightweight implementation
-        const r = B.r, c = B.c, Mc = B.Mc;
-        for (let it = 0; it < TRANSLATION_REFINEMENT_ITERATIONS; it++) {
+        // iterate
+        const MAX_ITERATIONS = 15;
+        const TOLERANCE = 1;
+        for (let it = 0; it < MAX_ITERATIONS; it++) {
+            //console.log("it",it+1);
             // compute residual r = Mt - v
             for (let i = 0; i < n3; i++) {
                 r[i] = 0;
@@ -24030,17 +23997,22 @@ class CameraModel {
                 for (let j = 0; j < 3; j++)
                     Mc[i] += m[j * n3 + i] * c[j];
             }
-            // compute num = c'c and den = (Mc)'(Mc)
-            let num = 0, den = 0;
+            // compute c'c
+            let num = 0;
             for (let i = 0; i < 3; i++)
                 num += c[i] * c[i];
+            //console.log("c'c=",num);
+            if (num < TOLERANCE)
+                break;
+            // compute (Mc)'(Mc)
+            let den = 0;
             for (let i = 0; i < n3; i++)
                 den += Mc[i] * Mc[i];
-            // compute num / den
+            // compute frc = c'c / (Mc)'(Mc)
             const frc = num / den;
-            if (Number.isNaN(frc))
+            if (Number.isNaN(frc)) // this shouldn't happen
                 break;
-            // iterate: t = t - (num / den) * c
+            // iterate: t = t - frc * c
             for (let i = 0; i < 3; i++)
                 t[i] -= frc * c[i];
         }
@@ -24084,7 +24056,7 @@ class CameraModel {
             for (let j = 0; j < 6; j++)
                 avg[j] += r[j] / n;
         }
-        const r = this._refineRotation(avg[0], avg[1], avg[2], avg[3], avg[4], avg[5]);
+        const r = this._refineRotation(avg);
         // average translations
         const m = this._translationBuffer.length;
         for (let i = 0; i < m; i++) {
@@ -24129,51 +24101,38 @@ class CameraModel {
     /**
      * Estimate the pose [ R | t ] given a homography in AR screen space
      * @param homography must be valid
-     * @param f focal length
      * @returns 3x4 matrix
      */
-    _estimatePose(homography, f = this._intrinsics[FY]) {
-        const normalizedHomography = this._normalizeHomography(homography, f);
+    _estimatePose(homography) {
+        const normalizedHomography = this._normalizeHomography(homography);
         const partialPose = speedy_vision_default().Matrix.Eye(3);
         // we want the estimated partial pose [ r1 | r2 | t ] to be as close
         // as possible to the normalized homography, up to a scale factor;
         // i.e., H * [ r1 | r2 | t ]^(-1) = s * I for a non-zero scalar s
-        // it won't be a perfect equality due to noise in the homography
+        // it won't be a perfect equality due to noise in the homography.
+        // remark: composition of homographies
         const residual = speedy_vision_default().Matrix(normalizedHomography);
         for (let k = 0; k < POSE_ITERATIONS; k++) {
             // incrementally improve the partial pose
             const rt = this._estimatePartialPose(residual); // rt should converge to the identity matrix
             partialPose.setToSync(rt.times(partialPose));
             residual.setToSync(residual.times(rt.inverse()));
+            //console.log("rt",rt.toString());
             //console.log("residual",residual.toString());
         }
         //console.log('-----------');
-        /*
-        // test
-        const result = Speedy.Matrix.Zeros(3);
-        result.setToSync(partialPose.times(normalizedHomography.inverse()));
-        const m11 = result.at(0,0);
-        result.setToSync(result.times(1/m11));
-        console.log("Pose * NORMALIZED HOM^-1", result.toString());
-        */
-        /*
-        const rt = partialPose.read();
-        const r = rt.slice(0, 6);
-        const t = this._refineTranslation(normalizedHomography, r, rt.slice(6, 9));
-        const refinedPartialPose = Speedy.Matrix(3, 3, r.concat(t));
-        const filteredPartialPose = this._filterPartialPose(refinedPartialPose);
-        */
+        // refine the translation vector
+        const mat = partialPose.read();
+        const r = mat.slice(0, 6);
+        const t0 = mat.slice(6, 9);
+        const t = this._refineTranslation(normalizedHomography, r, t0);
+        const refinedPartialPose = speedy_vision_default().Matrix(3, 3, r.concat(t));
         // filter the partial pose
-        const filteredPartialPose = this._filterPartialPose(partialPose);
+        const filteredPartialPose = this._filterPartialPose(refinedPartialPose);
         // estimate the full pose
-        return this._estimateFullPose(filteredPartialPose);
-    }
-    /**
-     * Store an estimated pose
-     * @param pose 3x4 matrix
-     */
-    _storePose(pose) {
-        this._extrinsics = pose.read();
+        //const finalPartialPose = partialPose;
+        const finalPartialPose = filteredPartialPose;
+        return this._estimateFullPose(finalPartialPose);
     }
 }
 
