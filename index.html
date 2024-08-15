@@ -12,14 +12,14 @@
         <meta name="author" content="Alexandre Martins">
       
       
-        <link rel="canonical" href="https://alemart.github.io/martins-js/">
+        <link rel="canonical" href="https://alemart.github.io/encantar-js/">
       
       <link rel="icon" href="assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.2.4">
     
     
       
-        <title>MARTINS.js: GPU-accelerated Augmented Reality for the web</title>
+        <title>encantAR.js: GPU-accelerated Augmented Reality for the web</title>
       
     
     
@@ -28,11 +28,15 @@
         
         <link rel="stylesheet" href="assets/stylesheets/palette.e6a45f82.min.css">
         
+          
+          
+          <meta name="theme-color" content="#7e56c2">
+        
       
     
     
 
-<script data-goatcounter="https://martins-js.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script data-goatcounter="https://encantar-js.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
     
       
@@ -52,10 +56,10 @@
 
     
     
-<meta property="og:title" content="Home - MARTINS.js: GPU-accelerated Augmented Reality for the web">
+<meta property="og:title" content="Home - encantAR.js: GPU-accelerated Augmented Reality for the web">
 <meta property="og:description" content="Open source WebAR engine. Runs everywhere. Easy to get started.">
-<meta property="og:url" content="https://alemart.github.io/martins-js/">
-<meta property="og:image" content="https://alemart.github.io/martins-js//img/poster.png">
+<meta property="og:url" content="https://alemart.github.io/encantar-js/">
+<meta property="og:image" content="https://alemart.github.io/encantar-js//img/poster.png">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="en_US">
 <meta property="robots" content="index, follow">
@@ -68,7 +72,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="deep-purple" data-md-color-accent="yellow">
   
     
     
@@ -89,9 +93,10 @@
 
 <header class="md-header md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="MARTINS.js: GPU-accelerated Augmented Reality for the web" class="md-header__button md-logo" aria-label="MARTINS.js: GPU-accelerated Augmented Reality for the web" data-md-component="logo">
+    <a href="." title="encantAR.js: GPU-accelerated Augmented Reality for the web" class="md-header__button md-logo" aria-label="encantAR.js: GPU-accelerated Augmented Reality for the web" data-md-component="logo">
       
-  <img src="img/martins-icon.png" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -101,7 +106,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            MARTINS.js: GPU-accelerated Augmented Reality for the web
+            encantAR.js: GPU-accelerated Augmented Reality for the web
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -151,13 +156,13 @@
     
     
       <div class="md-header__source">
-        <a href="https://github.com/alemart/martins-js/" title="Go to repository" class="md-source" data-md-component="source">
+        <a href="https://github.com/alemart/encantar-js/" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
   </div>
   <div class="md-source__repository">
-    alemart/martins-js
+    alemart/encantar-js
   </div>
 </a>
       </div>
@@ -242,7 +247,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="api/session/" class="md-tabs__link">
+      <a href="api/ar/" class="md-tabs__link">
         API
       </a>
     </li>
@@ -279,14 +284,12 @@
 }
 
 :root {
-    --md-secondary-fg-color: #8ef;
+    --md-secondary-fg-color: var(--md-accent-fg-color);
 }
 
 .md-button {
-    --md-primary-bg-color: #4051b5;
-    --md-primary-fg-color: var(--md-secondary-fg-color);
-    --md-accent-fg-color: var(--md-secondary-fg-color);
-    --md-accent-bg-color: var(--md-primary-fg-color--light);
+    --md-primary-bg-color: var(--md-primary-fg-color);
+    --md-primary-fg-color: var(--md-primary-bg-color);
     margin-top: 8px;
     margin-bottom: 8px;
 }
@@ -321,7 +324,7 @@
 
 .splash-text em {
     font-style: normal;
-    color: var(--md-secondary-fg-color);
+    color: var(--md-accent-fg-color);
 }
 
 .splash-text h2 {
@@ -372,13 +375,12 @@
 }
 </style>
 
-<section id="splash" data-md-color-primary="indigo">
+<section id="splash">
     <div class="splash-container md-grid">
         <div class="splash-text md-typeset appear text-center">
-            <h2><em>Create Augmented Reality experiences for the web.</em></h2>
-            <p>Open source WebAR engine. Runs everywhere. Easy to get started.</p>
-            <a href="getting-started" class="md-button md-button--primary">Get started</a>
-            <a href="demo" class="md-button" target="_blank">Try a demo</a>
+            <h2>&#x2728; encantAR.js &#x2728;</h2>
+            <p>Enchant your users with Augmented Reality experiences that run everywhere!</p>
+            <a href="getting-started" class="md-button">Get started</a>
         </div>
         <!--
         <div class="splash-image">

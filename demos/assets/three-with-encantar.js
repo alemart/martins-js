@@ -1,35 +1,35 @@
 /**
- * @file MARTINS.js & THREE.js glue code
+ * @file three.js plugin for encantar.js
  * @author Alexandre Martins (https://github.com/alemart)
  * @license LGPL-3.0-or-later
  */
 
 /* Usage of the indicated versions is encouraged */
-__THIS_GLUE_CODE_HAS_BEEN_TESTED_WITH__({
-    'MARTINS.js': { version: '0.2.0' },
-      'THREE.js': { version: '147' }
+__THIS_PLUGIN_HAS_BEEN_TESTED_WITH__({
+    'encantar.js': { version: '0.2.1' },
+       'three.js': { version: '147' }
 });
 
 /**
  * Use this object to create your augmented scene
  * @typedef {object} ARSystem
- * @property {Session} session MARTINS.js Session
+ * @property {Session} session AR Session
  * @property {Frame} frame current Frame
  * @property {ReferenceImage | null} referenceImage corresponds to the target being tracked (if any)
- * @property {THREE.Scene} scene THREE.js Scene
+ * @property {THREE.Scene} scene three.js Scene
  * @property {THREE.Group} root a 3D object that is automatically aligned with the physical target
  * @property {THREE.Camera} camera a camera adjusted for AR
- * @property {THREE.WebGLRenderer} renderer THREE.js renderer
+ * @property {THREE.WebGLRenderer} renderer three.js renderer
  */
 
 /**
- * Connect MARTINS.js to THREE.js
+ * Do magic to connect encantar.js to three.js
  * @param {() => Promise<Session> | SpeedyPromise<Session>} startARSession
  * @param {(ar: ARSystem) => void} [animateVirtualScene] animation callback
  * @param {(ar: ARSystem) => void | Promise<void> | SpeedyPromise<Session>} [initializeVirtualScene] initialization callback
  * @returns {Promise<ARSystem> | SpeedyPromise<ARSystem>}
  */
-function linkMartinsToTHREE(startARSession, animateVirtualScene, initializeVirtualScene)
+function encantar(startARSession, animateVirtualScene, initializeVirtualScene)
 {
     const ar = /** @type {ARSystem} */ ({
         session: null,
@@ -144,12 +144,12 @@ function linkMartinsToTHREE(startARSession, animateVirtualScene, initializeVirtu
  * Version check
  * @param {object} json
  */
-function __THIS_GLUE_CODE_HAS_BEEN_TESTED_WITH__(json)
+function __THIS_PLUGIN_HAS_BEEN_TESTED_WITH__(json)
 {
     window.addEventListener('load', () => {
-    try { Martins, __THREE__;
-    const versionOf = { 'MARTINS.js': Martins.version.replace(/-.*$/, ''), 'THREE.js': __THREE__ };
-    const check = (x,v,w) => v !== w ? console.warn(`\n\n\nWARNING\n\nThis glue code has been tested with ${x} version ${v}. The version in use is ${w}. Usage of ${x} version ${v} is recommended instead.\n\n\n`) : void 0;
+    try { AR, __THREE__;
+    const versionOf = { 'encantar.js': AR.version.replace(/-.*$/, ''), 'three.js': __THREE__ };
+    const check = (x,v,w) => v !== w ? console.warn(`\n\n\nWARNING\n\nThis plugin has been tested with ${x} version ${v}. The version in use is ${w}. Usage of ${x} version ${v} is recommended instead.\n\n\n`) : void 0;
     for(const [x, expected] of Object.entries(json)) check(x, expected.version, versionOf[x]);
     } catch(e) { alert(e.message); }
     });

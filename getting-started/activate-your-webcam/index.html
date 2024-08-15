@@ -12,14 +12,14 @@
         <meta name="author" content="Alexandre Martins">
       
       
-        <link rel="canonical" href="https://alemart.github.io/martins-js/getting-started/activate-your-webcam/">
+        <link rel="canonical" href="https://alemart.github.io/encantar-js/getting-started/activate-your-webcam/">
       
       <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.2.4">
     
     
       
-        <title>Activate your webcam - MARTINS.js: GPU-accelerated Augmented Reality for the web</title>
+        <title>Activate your webcam - encantAR.js: GPU-accelerated Augmented Reality for the web</title>
       
     
     
@@ -28,11 +28,15 @@
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.e6a45f82.min.css">
         
+          
+          
+          <meta name="theme-color" content="#7e56c2">
+        
       
     
     
 
-<script data-goatcounter="https://martins-js.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script data-goatcounter="https://encantar-js.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
     
       
@@ -52,10 +56,10 @@
 
     
     
-<meta property="og:title" content="Activate your webcam - MARTINS.js: GPU-accelerated Augmented Reality for the web">
+<meta property="og:title" content="Activate your webcam - encantAR.js: GPU-accelerated Augmented Reality for the web">
 <meta property="og:description" content="Open source WebAR engine. Runs everywhere. Easy to get started.">
-<meta property="og:url" content="https://alemart.github.io/martins-js/">
-<meta property="og:image" content="https://alemart.github.io/martins-js//img/poster.png">
+<meta property="og:url" content="https://alemart.github.io/encantar-js/">
+<meta property="og:image" content="https://alemart.github.io/encantar-js//img/poster.png">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="en_US">
 <meta property="robots" content="index, follow">
@@ -68,7 +72,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="deep-purple" data-md-color-accent="yellow">
   
     
     
@@ -94,9 +98,10 @@
 
 <header class="md-header md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="MARTINS.js: GPU-accelerated Augmented Reality for the web" class="md-header__button md-logo" aria-label="MARTINS.js: GPU-accelerated Augmented Reality for the web" data-md-component="logo">
+    <a href="../.." title="encantAR.js: GPU-accelerated Augmented Reality for the web" class="md-header__button md-logo" aria-label="encantAR.js: GPU-accelerated Augmented Reality for the web" data-md-component="logo">
       
-  <img src="../../img/martins-icon.png" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -106,7 +111,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            MARTINS.js: GPU-accelerated Augmented Reality for the web
+            encantAR.js: GPU-accelerated Augmented Reality for the web
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -156,13 +161,13 @@
     
     
       <div class="md-header__source">
-        <a href="https://github.com/alemart/martins-js/" title="Go to repository" class="md-source" data-md-component="source">
+        <a href="https://github.com/alemart/encantar-js/" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
   </div>
   <div class="md-source__repository">
-    alemart/martins-js
+    alemart/encantar-js
   </div>
 </a>
       </div>
@@ -247,7 +252,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../api/session/" class="md-tabs__link">
+      <a href="../../api/ar/" class="md-tabs__link">
         API
       </a>
     </li>
@@ -283,22 +288,23 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="MARTINS.js: GPU-accelerated Augmented Reality for the web" class="md-nav__button md-logo" aria-label="MARTINS.js: GPU-accelerated Augmented Reality for the web" data-md-component="logo">
+    <a href="../.." title="encantAR.js: GPU-accelerated Augmented Reality for the web" class="md-nav__button md-logo" aria-label="encantAR.js: GPU-accelerated Augmented Reality for the web" data-md-component="logo">
       
-  <img src="../../img/martins-icon.png" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
 
     </a>
-    MARTINS.js: GPU-accelerated Augmented Reality for the web
+    encantAR.js: GPU-accelerated Augmented Reality for the web
   </label>
   
     <div class="md-nav__source">
-      <a href="https://github.com/alemart/martins-js/" title="Go to repository" class="md-source" data-md-component="source">
+      <a href="https://github.com/alemart/encantar-js/" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
   </div>
   <div class="md-source__repository">
-    alemart/martins-js
+    alemart/encantar-js
   </div>
 </a>
     </div>
@@ -758,6 +764,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../../api/ar/" class="md-nav__link">
+        AR
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../api/session/" class="md-nav__link">
         Session
       </a>
@@ -788,20 +808,6 @@
     <li class="md-nav__item">
       <a href="../../api/time/" class="md-nav__link">
         Time
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../api/martins/" class="md-nav__link">
-        Martins
       </a>
     </li>
   
@@ -1551,28 +1557,9 @@
           <div class="md-content" data-md-component="content">
             <article class="md-content__inner md-typeset">
               
-<div class="share-buttons">
-
-<!-- Sharingbutton Facebook -->
-<a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=https%3A//alemart.github.io/martins-js/getting-started/activate-your-webcam/" target="_blank" rel="noopener" aria-label="">
-  <div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18.77 7.46H14.5v-1.9c0-.9.6-1.1 1-1.1h3V.5h-4.33C10.24.5 9.5 3.44 9.5 5.32v2.15h-3v4h3v12h5v-12h3.85l.42-4z"/></svg>
-    </div>
-  </div>
-</a>
-
-<!-- Sharingbutton Twitter -->
-<a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?text=%23MARTINSjs%20%23WebAR&amp;url=https%3A//alemart.github.io/martins-js/getting-started/activate-your-webcam/" target="_blank" rel="noopener" aria-label="">
-  <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M23.44 4.83c-.8.37-1.5.38-2.22.02.93-.56.98-.96 1.32-2.02-.88.52-1.86.9-2.9 1.1-.82-.88-2-1.43-3.3-1.43-2.5 0-4.55 2.04-4.55 4.54 0 .36.03.7.1 1.04-3.77-.2-7.12-2-9.36-4.75-.4.67-.6 1.45-.6 2.3 0 1.56.8 2.95 2 3.77-.74-.03-1.44-.23-2.05-.57v.06c0 2.2 1.56 4.03 3.64 4.44-.67.2-1.37.2-2.06.08.58 1.8 2.26 3.12 4.25 3.16C5.78 18.1 3.37 18.74 1 18.46c2 1.3 4.4 2.04 6.97 2.04 8.35 0 12.92-6.92 12.92-12.93 0-.2 0-.4-.02-.6.9-.63 1.96-1.22 2.56-2.14z"/></svg>
-    </div>
-  </div>
-</a>
-
-</div>
 
                 
-<a href="https://github.com/alemart/martins-js/edit/master/docs/getting-started/activate-your-webcam.md" title="Edit this page" class="md-content__button md-icon">
+<a href="https://github.com/alemart/encantar-js/edit/master/docs/getting-started/activate-your-webcam.md" title="Edit this page" class="md-content__button md-icon">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
 </a>
 
@@ -1581,31 +1568,31 @@
 <h1 id="activate-your-webcam">Activate your webcam</h1>
 <p>In this section we're going to learn how to use your webcam to capture the video. We're also going to polish our work and make it presentable to users.</p>
 <h2 id="change-the-source-of-data">Change the source of data</h2>
-<p>Instead of using a video file, we're going to use your webcam. We simply need to change the source of data and instruct MARTINS.js to use your webcam. We'll do it with 1 new line of code!</p>
+<p>Instead of using a video file, we're going to use your webcam. We simply need to change the source of data and instruct encantAR.js to use your webcam. We'll do it with 1 new line of code!</p>
 <div class="highlight"><span class="filename">ar-demo.js</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">async</span> <span class="kd">function</span> <span class="nx">startARSession</span><span class="p">()</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="p">{</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">Martins</span><span class="p">.</span><span class="nx">isSupported</span><span class="p">())</span> <span class="p">{</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">AR</span><span class="p">.</span><span class="nx">isSupported</span><span class="p">())</span> <span class="p">{</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>        <span class="k">throw</span> <span class="ow">new</span> <span class="ne">Error</span><span class="p">(</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>            <span class="s1">&#39;This device is not compatible with this AR experience.\n\n&#39;</span> <span class="o">+</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>            <span class="s1">&#39;User agent: &#39;</span> <span class="o">+</span> <span class="nx">navigator</span><span class="p">.</span><span class="nx">userAgent</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>        <span class="p">);</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="p">}</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="kd">const</span> <span class="nx">tracker</span> <span class="o">=</span> <span class="nx">Martins</span><span class="p">.</span><span class="nx">Tracker</span><span class="p">.</span><span class="nx">ImageTracker</span><span class="p">();</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="kd">const</span> <span class="nx">tracker</span> <span class="o">=</span> <span class="nx">AR</span><span class="p">.</span><span class="nx">Tracker</span><span class="p">.</span><span class="nx">ImageTracker</span><span class="p">();</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="k">await</span> <span class="nx">tracker</span><span class="p">.</span><span class="nx">database</span><span class="p">.</span><span class="nx">add</span><span class="p">([{</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>        <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;my-reference-image&#39;</span><span class="p">,</span>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>        <span class="nx">image</span><span class="o">:</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;my-reference-image&#39;</span><span class="p">)</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="p">}]);</span>
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="kd">const</span> <span class="nx">viewport</span> <span class="o">=</span> <span class="nx">Martins</span><span class="p">.</span><span class="nx">Viewport</span><span class="p">({</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="kd">const</span> <span class="nx">viewport</span> <span class="o">=</span> <span class="nx">AR</span><span class="p">.</span><span class="nx">Viewport</span><span class="p">({</span>
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>        <span class="nx">container</span><span class="o">:</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;ar-viewport&#39;</span><span class="p">)</span>
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="p">});</span>
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="hll">    <span class="c1">//const video = document.getElementById(&#39;my-video&#39;); // comment this line</span>
-</span><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="hll">    <span class="c1">//const source = Martins.Source.Video(video); // comment this line</span>
-</span><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="hll">    <span class="kd">const</span> <span class="nx">source</span> <span class="o">=</span> <span class="nx">Martins</span><span class="p">.</span><span class="nx">Source</span><span class="p">.</span><span class="nx">Camera</span><span class="p">();</span>
+</span><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="hll">    <span class="c1">//const source = AR.Source.Video(video); // comment this line</span>
+</span><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="hll">    <span class="kd">const</span> <span class="nx">source</span> <span class="o">=</span> <span class="nx">AR</span><span class="p">.</span><span class="nx">Source</span><span class="p">.</span><span class="nx">Camera</span><span class="p">();</span>
 </span><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    <span class="kd">const</span> <span class="nx">session</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">Martins</span><span class="p">.</span><span class="nx">startSession</span><span class="p">({</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    <span class="kd">const</span> <span class="nx">session</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">AR</span><span class="p">.</span><span class="nx">startSession</span><span class="p">({</span>
 <a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>        <span class="nx">mode</span><span class="o">:</span> <span class="s1">&#39;immersive&#39;</span><span class="p">,</span>
 <a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>        <span class="nx">viewport</span><span class="o">:</span> <span class="nx">viewport</span><span class="p">,</span>
 <a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>        <span class="nx">trackers</span><span class="o">:</span> <span class="p">[</span> <span class="nx">tracker</span> <span class="p">],</span>
@@ -1623,8 +1610,8 @@
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>        <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">&quot;utf-8&quot;</span><span class="p">&gt;</span>
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>        <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">name</span><span class="o">=</span><span class="s">&quot;viewport&quot;</span> <span class="na">content</span><span class="o">=</span><span class="s">&quot;width=device-width,initial-scale=1&quot;</span><span class="p">&gt;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>        <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>MARTINS.js WebAR demo<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>        <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;martins.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>        <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>encantAR.js WebAR demo<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>        <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;encantar.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>        <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;ar-demo.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>        <span class="p">&lt;</span><span class="nt">style</span><span class="p">&gt;</span><span class="nt">body</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">background-color</span><span class="p">:</span><span class="w"> </span><span class="mh">#3d5afe</span><span class="p">;</span><span class="w"> </span><span class="p">}&lt;/</span><span class="nt">style</span><span class="p">&gt;</span>
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
@@ -1652,7 +1639,7 @@
 </div>
 <div class="admonition tip">
 <p class="admonition-title">Check your physical scene</p>
-<p>Good lighting conditions are important for a good user experience. Even though the MARTINS.js can handle various lighting conditions, you should get your physical scene appropriately illuminated.</p>
+<p>Good lighting conditions are important for a good user experience. Even though the encantAR.js can handle various lighting conditions, you should get your physical scene appropriately illuminated.</p>
 <p>When developing your own WebAR experiences, ask yourself:</p>
 <ul>
 <li>Will my users experience AR indoors? If so, make sure that the room is sufficiently illuminated.</li>
@@ -1686,9 +1673,9 @@
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>        <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">&quot;utf-8&quot;</span><span class="p">&gt;</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>        <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">name</span><span class="o">=</span><span class="s">&quot;viewport&quot;</span> <span class="na">content</span><span class="o">=</span><span class="s">&quot;width=device-width,initial-scale=1&quot;</span><span class="p">&gt;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>        <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>MARTINS.js WebAR demo<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>        <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>encantAR.js WebAR demo<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>        <span class="cm">&lt;!-- &lt;script&gt; tags of the rendering engine of your choice --&gt;</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>        <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;martins.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>        <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;encantar.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>        <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;ar-demo.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="hll">        <span class="p">&lt;</span><span class="nt">style</span><span class="p">&gt;</span><span class="w"></span>
 </span><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="hll"><span class="w">        </span><span class="nt">body</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">background-color</span><span class="p">:</span><span class="w"> </span><span class="mh">#3d5afe</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
@@ -1713,29 +1700,29 @@
 </code></pre></div>
 <div class="highlight"><span class="filename">ar-demo.js</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">async</span> <span class="kd">function</span> <span class="nx">startARSession</span><span class="p">()</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="p">{</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">Martins</span><span class="p">.</span><span class="nx">isSupported</span><span class="p">())</span> <span class="p">{</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">AR</span><span class="p">.</span><span class="nx">isSupported</span><span class="p">())</span> <span class="p">{</span>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>        <span class="k">throw</span> <span class="ow">new</span> <span class="ne">Error</span><span class="p">(</span>
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>            <span class="s1">&#39;This device is not compatible with this AR experience.\n\n&#39;</span> <span class="o">+</span>
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>            <span class="s1">&#39;User agent: &#39;</span> <span class="o">+</span> <span class="nx">navigator</span><span class="p">.</span><span class="nx">userAgent</span>
 <a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>        <span class="p">);</span>
 <a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="p">}</span>
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="kd">const</span> <span class="nx">tracker</span> <span class="o">=</span> <span class="nx">Martins</span><span class="p">.</span><span class="nx">Tracker</span><span class="p">.</span><span class="nx">ImageTracker</span><span class="p">();</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="kd">const</span> <span class="nx">tracker</span> <span class="o">=</span> <span class="nx">AR</span><span class="p">.</span><span class="nx">Tracker</span><span class="p">.</span><span class="nx">ImageTracker</span><span class="p">();</span>
 <a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="k">await</span> <span class="nx">tracker</span><span class="p">.</span><span class="nx">database</span><span class="p">.</span><span class="nx">add</span><span class="p">([{</span>
 <a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>        <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;my-reference-image&#39;</span><span class="p">,</span>
 <a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>        <span class="nx">image</span><span class="o">:</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;my-reference-image&#39;</span><span class="p">)</span>
 <a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    <span class="p">}]);</span>
 <a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>    <span class="kd">const</span> <span class="nx">viewport</span> <span class="o">=</span> <span class="nx">Martins</span><span class="p">.</span><span class="nx">Viewport</span><span class="p">({</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>    <span class="kd">const</span> <span class="nx">viewport</span> <span class="o">=</span> <span class="nx">AR</span><span class="p">.</span><span class="nx">Viewport</span><span class="p">({</span>
 <a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="hll">        <span class="nx">container</span><span class="o">:</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;ar-viewport&#39;</span><span class="p">),</span>
 </span><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="hll">        <span class="nx">hudContainer</span><span class="o">:</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;ar-hud&#39;</span><span class="p">)</span>
 </span><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>    <span class="p">});</span>
 <a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>
 <a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>    <span class="c1">//const video = document.getElementById(&#39;my-video&#39;);</span>
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>    <span class="c1">//const source = Martins.Source.Video(video);</span>
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>    <span class="kd">const</span> <span class="nx">source</span> <span class="o">=</span> <span class="nx">Martins</span><span class="p">.</span><span class="nx">Source</span><span class="p">.</span><span class="nx">Camera</span><span class="p">();</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>    <span class="c1">//const source = AR.Source.Video(video);</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>    <span class="kd">const</span> <span class="nx">source</span> <span class="o">=</span> <span class="nx">AR</span><span class="p">.</span><span class="nx">Source</span><span class="p">.</span><span class="nx">Camera</span><span class="p">();</span>
 <a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>    <span class="kd">const</span> <span class="nx">session</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">Martins</span><span class="p">.</span><span class="nx">startSession</span><span class="p">({</span>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>    <span class="kd">const</span> <span class="nx">session</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">AR</span><span class="p">.</span><span class="nx">startSession</span><span class="p">({</span>
 <a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>        <span class="nx">mode</span><span class="o">:</span> <span class="s1">&#39;immersive&#39;</span><span class="p">,</span>
 <a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>        <span class="nx">viewport</span><span class="o">:</span> <span class="nx">viewport</span><span class="p">,</span>
 <a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>        <span class="nx">trackers</span><span class="o">:</span> <span class="p">[</span> <span class="nx">tracker</span> <span class="p">],</span>
@@ -1753,29 +1740,29 @@
 <p>A simple way to know whether or not we're tracking a target image is to use events. We're going to add two event listeners to our tracker. If a  <code>targetfound</code> event happens, we hide the scan gimmick. If a <code>targetlost</code> event happens, we show the scan gimmick again.</p>
 <div class="highlight"><span class="filename">ar-demo.js</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">async</span> <span class="kd">function</span> <span class="nx">startARSession</span><span class="p">()</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="p">{</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">Martins</span><span class="p">.</span><span class="nx">isSupported</span><span class="p">())</span> <span class="p">{</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">AR</span><span class="p">.</span><span class="nx">isSupported</span><span class="p">())</span> <span class="p">{</span>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>        <span class="k">throw</span> <span class="ow">new</span> <span class="ne">Error</span><span class="p">(</span>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>            <span class="s1">&#39;This device is not compatible with this AR experience.\n\n&#39;</span> <span class="o">+</span>
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>            <span class="s1">&#39;User agent: &#39;</span> <span class="o">+</span> <span class="nx">navigator</span><span class="p">.</span><span class="nx">userAgent</span>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>        <span class="p">);</span>
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="p">}</span>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="kd">const</span> <span class="nx">tracker</span> <span class="o">=</span> <span class="nx">Martins</span><span class="p">.</span><span class="nx">Tracker</span><span class="p">.</span><span class="nx">ImageTracker</span><span class="p">();</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="kd">const</span> <span class="nx">tracker</span> <span class="o">=</span> <span class="nx">AR</span><span class="p">.</span><span class="nx">Tracker</span><span class="p">.</span><span class="nx">ImageTracker</span><span class="p">();</span>
 <a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    <span class="k">await</span> <span class="nx">tracker</span><span class="p">.</span><span class="nx">database</span><span class="p">.</span><span class="nx">add</span><span class="p">([{</span>
 <a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>        <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;my-reference-image&#39;</span><span class="p">,</span>
 <a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>        <span class="nx">image</span><span class="o">:</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;my-reference-image&#39;</span><span class="p">)</span>
 <a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>    <span class="p">}]);</span>
 <a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>    <span class="kd">const</span> <span class="nx">viewport</span> <span class="o">=</span> <span class="nx">Martins</span><span class="p">.</span><span class="nx">Viewport</span><span class="p">({</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>    <span class="kd">const</span> <span class="nx">viewport</span> <span class="o">=</span> <span class="nx">AR</span><span class="p">.</span><span class="nx">Viewport</span><span class="p">({</span>
 <a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>        <span class="nx">container</span><span class="o">:</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;ar-viewport&#39;</span><span class="p">),</span>
 <a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>        <span class="nx">hudContainer</span><span class="o">:</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;ar-hud&#39;</span><span class="p">)</span>
 <a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>    <span class="p">});</span>
 <a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
 <a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>    <span class="c1">//const video = document.getElementById(&#39;my-video&#39;);</span>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>    <span class="c1">//const source = Martins.Source.Video(video);</span>
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>    <span class="kd">const</span> <span class="nx">source</span> <span class="o">=</span> <span class="nx">Martins</span><span class="p">.</span><span class="nx">Source</span><span class="p">.</span><span class="nx">Camera</span><span class="p">();</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>    <span class="c1">//const source = AR.Source.Video(video);</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>    <span class="kd">const</span> <span class="nx">source</span> <span class="o">=</span> <span class="nx">AR</span><span class="p">.</span><span class="nx">Source</span><span class="p">.</span><span class="nx">Camera</span><span class="p">();</span>
 <a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>
-<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>    <span class="kd">const</span> <span class="nx">session</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">Martins</span><span class="p">.</span><span class="nx">startSession</span><span class="p">({</span>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>    <span class="kd">const</span> <span class="nx">session</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">AR</span><span class="p">.</span><span class="nx">startSession</span><span class="p">({</span>
 <a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>        <span class="nx">mode</span><span class="o">:</span> <span class="s1">&#39;immersive&#39;</span><span class="p">,</span>
 <a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>        <span class="nx">viewport</span><span class="o">:</span> <span class="nx">viewport</span><span class="p">,</span>
 <a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>        <span class="nx">trackers</span><span class="o">:</span> <span class="p">[</span> <span class="nx">tracker</span> <span class="p">],</span>
@@ -1798,33 +1785,33 @@
 <a id="__codelineno-4-45" name="__codelineno-4-45" href="#__codelineno-4-45"></a><span class="p">}</span>
 </code></pre></div>
 <h2 id="hide-the-gizmos">Hide the gizmos</h2>
-<p>Let's polish our work even more by hiding the gizmos. You may just set <code>gizmos</code> to <code>false</code> in <code>Martins.startSession()</code> and there will be no more gizmos. Do the same to hide the stats panel.</p>
+<p>Let's polish our work even more by hiding the gizmos. You may just set <code>gizmos</code> to <code>false</code> in <code>AR.startSession()</code> and there will be no more gizmos. Do the same to hide the stats panel.</p>
 <p>Let me show you a different approach. Instead of getting rid of the gizmos completely, we're going to hide them partially. They will be displayed when the tracker is scanning the physical scene, but not when the physical scene is being augmented. That's easy to do with the event listeners we have just set up:</p>
 <div class="highlight"><span class="filename">ar-demo.js</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">async</span> <span class="kd">function</span> <span class="nx">startARSession</span><span class="p">()</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="p">{</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">Martins</span><span class="p">.</span><span class="nx">isSupported</span><span class="p">())</span> <span class="p">{</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">AR</span><span class="p">.</span><span class="nx">isSupported</span><span class="p">())</span> <span class="p">{</span>
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>        <span class="k">throw</span> <span class="ow">new</span> <span class="ne">Error</span><span class="p">(</span>
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>            <span class="s1">&#39;This device is not compatible with this AR experience.\n\n&#39;</span> <span class="o">+</span>
 <a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>            <span class="s1">&#39;User agent: &#39;</span> <span class="o">+</span> <span class="nx">navigator</span><span class="p">.</span><span class="nx">userAgent</span>
 <a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>        <span class="p">);</span>
 <a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="p">}</span>
 <a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    <span class="kd">const</span> <span class="nx">tracker</span> <span class="o">=</span> <span class="nx">Martins</span><span class="p">.</span><span class="nx">Tracker</span><span class="p">.</span><span class="nx">ImageTracker</span><span class="p">();</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    <span class="kd">const</span> <span class="nx">tracker</span> <span class="o">=</span> <span class="nx">AR</span><span class="p">.</span><span class="nx">Tracker</span><span class="p">.</span><span class="nx">ImageTracker</span><span class="p">();</span>
 <a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    <span class="k">await</span> <span class="nx">tracker</span><span class="p">.</span><span class="nx">database</span><span class="p">.</span><span class="nx">add</span><span class="p">([{</span>
 <a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>        <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;my-reference-image&#39;</span><span class="p">,</span>
 <a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>        <span class="nx">image</span><span class="o">:</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;my-reference-image&#39;</span><span class="p">)</span>
 <a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>    <span class="p">}]);</span>
 <a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>    <span class="kd">const</span> <span class="nx">viewport</span> <span class="o">=</span> <span class="nx">Martins</span><span class="p">.</span><span class="nx">Viewport</span><span class="p">({</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>    <span class="kd">const</span> <span class="nx">viewport</span> <span class="o">=</span> <span class="nx">AR</span><span class="p">.</span><span class="nx">Viewport</span><span class="p">({</span>
 <a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>        <span class="nx">container</span><span class="o">:</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;ar-viewport&#39;</span><span class="p">),</span>
 <a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>        <span class="nx">hudContainer</span><span class="o">:</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;ar-hud&#39;</span><span class="p">)</span>
 <a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>    <span class="p">});</span>
 <a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>
 <a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>    <span class="c1">//const video = document.getElementById(&#39;my-video&#39;);</span>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>    <span class="c1">//const source = Martins.Source.Video(video);</span>
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>    <span class="kd">const</span> <span class="nx">source</span> <span class="o">=</span> <span class="nx">Martins</span><span class="p">.</span><span class="nx">Source</span><span class="p">.</span><span class="nx">Camera</span><span class="p">();</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>    <span class="c1">//const source = AR.Source.Video(video);</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>    <span class="kd">const</span> <span class="nx">source</span> <span class="o">=</span> <span class="nx">AR</span><span class="p">.</span><span class="nx">Source</span><span class="p">.</span><span class="nx">Camera</span><span class="p">();</span>
 <a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>
-<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>    <span class="kd">const</span> <span class="nx">session</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">Martins</span><span class="p">.</span><span class="nx">startSession</span><span class="p">({</span>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>    <span class="kd">const</span> <span class="nx">session</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">AR</span><span class="p">.</span><span class="nx">startSession</span><span class="p">({</span>
 <a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>        <span class="nx">mode</span><span class="o">:</span> <span class="s1">&#39;immersive&#39;</span><span class="p">,</span>
 <a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>        <span class="nx">viewport</span><span class="o">:</span> <span class="nx">viewport</span><span class="p">,</span>
 <a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>        <span class="nx">trackers</span><span class="o">:</span> <span class="p">[</span> <span class="nx">tracker</span> <span class="p">],</span>
@@ -1922,7 +1909,7 @@
 <!-- Copyright and theme information - modified by Alexandre -->
 <div class="md-copyright">
     <div class="md-copyright__highlight">
-      MARTINS.js: GPU-accelerated Augmented Reality for the web.
+      encantAR.js: GPU-accelerated Augmented Reality for the web.
       Copyright &copy; 2022 - present Alexandre Martins.
     </div>
   

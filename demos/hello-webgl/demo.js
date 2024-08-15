@@ -1,9 +1,3 @@
-/**
- * @file MARTINS.js WebAR demo with WebGL
- * @author Alexandre Martins (https://github.com/alemart)
- * @license LGPL-3.0-or-later
- */
-
 /*
 
 Note:
@@ -842,7 +836,7 @@ class WingMan extends Sprite
 
 /*
 
-MARTINS.js + WebGL code:
+encantar.js + WebGL code:
 
 */
 
@@ -917,22 +911,22 @@ window.addEventListener('load', async function() {
 
     async function startARSession()
     {
-        if(!Martins.isSupported()) {
+        if(!AR.isSupported()) {
             throw new Error(
                 'This device is not compatible with this AR experience.\n\n' +
                 'User agent: ' + navigator.userAgent
             );
         }
 
-        //Martins.Settings.powerPreference = 'low-power';
+        //AR.Settings.powerPreference = 'low-power';
 
-        const tracker = Martins.Tracker.ImageTracker();
+        const tracker = AR.Tracker.ImageTracker();
         await tracker.database.add([{
             name: 'my-reference-image',
             image: document.getElementById('my-reference-image')
         }]);
 
-        const viewport = Martins.Viewport({
+        const viewport = AR.Viewport({
             container: document.getElementById('ar-viewport'),
             hudContainer: document.getElementById('ar-hud')
         });
@@ -940,10 +934,10 @@ window.addEventListener('load', async function() {
         const video = document.getElementById('my-video');
         const useWebcam = (video === null);
         const source = useWebcam ?
-            Martins.Source.Camera({ resolution: 'md' }) :
-            Martins.Source.Video(video);
+            AR.Source.Camera({ resolution: 'md' }) :
+            AR.Source.Video(video);
 
-        const session = await Martins.startSession({
+        const session = await AR.startSession({
             mode: 'immersive',
             viewport: viewport,
             trackers: [ tracker ],

@@ -1,20 +1,20 @@
 /**
- * @file MARTINS.js & AFRAME glue code
+ * @file aframe plugin for encantar.js
  * @author Alexandre Martins (https://github.com/alemart)
  * @license LGPL-3.0-or-later
  */
 
 /* Usage of the indicated versions is encouraged */
-__THIS_GLUE_CODE_HAS_BEEN_TESTED_WITH__({
-    'MARTINS.js': { version: '0.2.0' },
-        'AFRAME': { version: '1.4.2' }
+__THIS_PLUGIN_HAS_BEEN_TESTED_WITH__({
+    'encantar.js': { version: '0.2.0' },
+         'aframe': { version: '1.4.2' }
 });
 
 /**
- * Connect MARTINS.js to AFRAME
+ * Do magic to connect encantar.js to aframe
  * @param {(canvas: HTMLCanvasElement) => Promise<Session> | SpeedyPromise<Session>} startARSession
  */
-function linkMartinsToAFRAME(startARSession)
+function encantar(startARSession)
 {
     AFRAME.registerSystem('ar-system', {
         init()
@@ -218,7 +218,7 @@ function linkMartinsToAFRAME(startARSession)
 
 // Start automatically
 if(typeof startARSession === 'function')
-    linkMartinsToAFRAME(startARSession);
+    encantar(startARSession);
 else
     alert('Missing startARSession');
 
@@ -226,11 +226,11 @@ else
  * Version check
  * @param {object} json
  */
-function __THIS_GLUE_CODE_HAS_BEEN_TESTED_WITH__(json)
+function __THIS_PLUGIN_HAS_BEEN_TESTED_WITH__(json)
 {
-    try { Martins, AFRAME;
-    const versionOf = { 'MARTINS.js': Martins.version.replace(/-.*$/, ''), 'AFRAME': AFRAME.version };
-    const check = (x,v,w) => v !== w ? console.warn(`\n\n\nWARNING\n\nThis glue code has been tested with ${x} version ${v}. The version in use is ${w}. Usage of ${x} version ${v} is recommended instead.\n\n\n`) : void 0;
+    try { AR, AFRAME;
+    const versionOf = { 'encantar.js': AR.version.replace(/-.*$/, ''), 'aframe': AFRAME.version };
+    const check = (x,v,w) => v !== w ? console.warn(`\n\n\nWARNING\n\nThis plugin has been tested with ${x} version ${v}. The version in use is ${w}. Usage of ${x} version ${v} is recommended instead.\n\n\n`) : void 0;
     for(const [x, expected] of Object.entries(json)) check(x, expected.version, versionOf[x]);
     } catch(e) { alert(e.message); }
 }

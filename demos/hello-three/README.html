@@ -2,8 +2,22 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>MARTINS.js WebAR demo with three.js</title>
+        <title>encantAR.js WebAR demo with three.js</title>
         <style>
+        body {
+            font-family: sans-serif;
+            background-color: whitesmoke;
+        }
+
+        a:any-link {
+            color: #7e56c2;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
         li + li {
             margin-top: 1em;
         }
@@ -17,17 +31,23 @@
             display: block;
             width: 256px;
             image-rendering: pixelated;
+            border: 1px dashed black;
         }
 
-        a.button img {
-            width: 6em;
-            height: 6em;
-            border-radius: 8px;
+        a img {
+            height: 5em;
+            border-radius: 4px;
+        }
+
+        @media screen and (min-width: 768px) {
+            a img {
+                height: 3em;
+            }
         }
         </style>
     </head>
     <body>
-        <h1>WebAR with three.js</h1>
+        <h1>encantAR.js with three.js</h1>
         <p>Scan the QR code to launch the web-based Augmented Reality experience. Next, scan <a href="../assets/my-reference-image.webp" target="_blank">this cartoon</a>.</p>
 
         <h2>Menu</h2>
@@ -42,12 +62,13 @@
         <img src="qr-code.gif" alt="QR code" class="qr-code">
 
         <h2>Share</h2>
-        <p>This application is powered by <a href="https://alemart.github.io/martins-js" target="_blank">MARTINS.js: GPU-accelerated Augmented Reality for the web</a>.</p>
+        <p>This application is powered by <a href="https://alemart.github.io/encantar-js" target="_blank">encantAR.js: GPU-accelerated Augmented Reality for the web</a>.</p>
         <div>
-            <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Falemart.github.io/martins-js&quote=%23martins-js" target="_blank" rel="external" class="button"><img src="../assets/facebook.png" alt="Share on Facebook"></a>
-            <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Falemart.github.io/martins-js&hashtags=martins-js" target="_blank" rel="external" class="button"><img src="../assets/twitter.png" alt="Share on X"></a>
-            <a href="https://wa.me/?text=https%3A%2F%2Falemart.github.io/martins-js" target="_blank" rel="external" class="button"><img src="../assets/whatsapp.png" alt="Share via WhatsApp"></a>
-            <a href="https://t.me/share/url?url=https%3A%2F%2Falemart.github.io/martins-js" target="_blank" rel="external" class="button"><img src="../assets/telegram.png" alt="Share via Telegram"></a>
+            <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Falemart.github.io/encantar-js&quote=%23encantar-js" target="_blank" rel="external" class="button"><img src="../assets/facebook.png" alt="Share on Facebook"></a>
+            <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Falemart.github.io/encantar-js&hashtags=encantar-js" target="_blank" rel="external" class="button"><img src="../assets/twitter.png" alt="Share on X"></a>
+            <a href="https://wa.me/?text=https%3A%2F%2Falemart.github.io/encantar-js" target="_blank" rel="external" class="button"><img src="../assets/whatsapp.png" alt="Share via WhatsApp"></a>
+            <a href="https://t.me/share/url?url=https%3A%2F%2Falemart.github.io/encantar-js" target="_blank" rel="external" class="button"><img src="../assets/telegram.png" alt="Share via Telegram"></a>
+            <a href="https://github.com/sponsors/alemart" target="_blank" rel="external"><img alt="GitHub Sponsors" src="https://img.shields.io/github/sponsors/alemart?style=for-the-badge&logo=github&label=Sponsor&labelColor=%237e56c2&color=%23ffd500"></a>
         </div>
     </body>
 </html>

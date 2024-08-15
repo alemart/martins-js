@@ -1,11 +1,11 @@
 /*!
- * MARTINS.js version 0.2.1-wip
+ * encantAR.js version 0.3.0
  * GPU-accelerated Augmented Reality for the web
  * Copyright 2022-2024 Alexandre Martins <alemartf(at)gmail.com> (https://github.com/alemart)
- * https://github.com/alemart/martins-js
+ * https://github.com/alemart/encantar-js
  *
  * @license LGPL-3.0-or-later
- * Date: 2024-07-29T00:26:10.319Z
+ * Date: 2024-08-15T23:42:41.661Z
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -13,9 +13,9 @@
 	else if(typeof define === 'function' && define.amd)
 		define([], factory);
 	else if(typeof exports === 'object')
-		exports["Martins"] = factory();
+		exports["AR"] = factory();
 	else
-		root["Martins"] = factory();
+		root["AR"] = factory();
 })(self, () => {
 return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
@@ -19384,7 +19384,7 @@ var __webpack_exports__ = {};
 
 // EXPORTS
 __webpack_require__.d(__webpack_exports__, {
-  "default": () => (/* binding */ Martins)
+  "default": () => (/* binding */ AR)
 });
 
 // EXTERNAL MODULE: ./node_modules/speedy-vision/dist/speedy-vision.js
@@ -19392,7 +19392,7 @@ var speedy_vision = __webpack_require__(774);
 var speedy_vision_default = /*#__PURE__*/__webpack_require__.n(speedy_vision);
 ;// CONCATENATED MODULE: ./src/utils/errors.ts
 /*
- * MARTINS.js
+ * encantar.js
  * GPU-accelerated Augmented Reality for the web
  * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
  *
@@ -19413,9 +19413,9 @@ var speedy_vision_default = /*#__PURE__*/__webpack_require__.n(speedy_vision);
  * Error classes
  */
 /**
- * Generic error class
+ * Base error class
  */
-class MartinsError extends Error {
+class BaseError extends Error {
     /**
      * Constructor
      * @param message error message
@@ -19443,7 +19443,7 @@ class MartinsError extends Error {
 /**
  * A method has received one or more illegal arguments
  */
-class IllegalArgumentError extends MartinsError {
+class IllegalArgumentError extends BaseError {
     get name() {
         return 'IllegalArgumentError';
     }
@@ -19452,7 +19452,7 @@ class IllegalArgumentError extends MartinsError {
  * The method arguments are valid, but the method can't be called due to the
  * current state of the object
  */
-class IllegalOperationError extends MartinsError {
+class IllegalOperationError extends BaseError {
     get name() {
         return 'IllegalOperationError';
     }
@@ -19460,7 +19460,7 @@ class IllegalOperationError extends MartinsError {
 /**
  * The requested operation is not supported
  */
-class NotSupportedError extends MartinsError {
+class NotSupportedError extends BaseError {
     get name() {
         return 'NotSupportedError';
     }
@@ -19468,7 +19468,7 @@ class NotSupportedError extends MartinsError {
 /**
  * Access denied
  */
-class AccessDeniedError extends MartinsError {
+class AccessDeniedError extends BaseError {
     get name() {
         return 'AccessDeniedError';
     }
@@ -19476,7 +19476,7 @@ class AccessDeniedError extends MartinsError {
 /**
  * Timeout
  */
-class TimeoutError extends MartinsError {
+class TimeoutError extends BaseError {
     get name() {
         return 'TimeoutError';
     }
@@ -19484,7 +19484,7 @@ class TimeoutError extends MartinsError {
 /**
  * Assertion error
  */
-class AssertionError extends MartinsError {
+class AssertionError extends BaseError {
     get name() {
         return 'AssertionError';
     }
@@ -19492,7 +19492,7 @@ class AssertionError extends MartinsError {
 /**
  * Tracking error
  */
-class TrackingError extends MartinsError {
+class TrackingError extends BaseError {
     get name() {
         return 'TrackingError';
     }
@@ -19500,7 +19500,7 @@ class TrackingError extends MartinsError {
 /**
  * Detection error
  */
-class DetectionError extends MartinsError {
+class DetectionError extends BaseError {
     get name() {
         return 'DetectionError';
     }
@@ -19508,15 +19508,15 @@ class DetectionError extends MartinsError {
 /**
  * Training error
  */
-class TrainingError extends MartinsError {
+class TrainingError extends BaseError {
     get name() {
         return 'TrainingError';
     }
 }
 
-;// CONCATENATED MODULE: ./src/core/resolution.ts
+;// CONCATENATED MODULE: ./src/utils/resolution.ts
 /*
- * MARTINS.js
+ * encantar.js
  * GPU-accelerated Augmented Reality for the web
  * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
  *
@@ -19536,6 +19536,7 @@ class TrainingError extends MartinsError {
  * resolution.ts
  * Resolution utilities
  */
+
 
 /** Reference heights when in landscape mode, measured in pixels */
 const REFERENCE_HEIGHT = {
@@ -19557,6 +19558,10 @@ const REFERENCE_HEIGHT = {
 function computeResolution(resolution, aspectRatio) {
     const referenceHeight = REFERENCE_HEIGHT[resolution];
     let width = 0, height = 0;
+    if (referenceHeight === undefined)
+        throw new IllegalArgumentError('Invalid resolution: ' + resolution);
+    else if (aspectRatio <= 0)
+        throw new IllegalArgumentError('Invalid aspect ratio: ' + aspectRatio);
     if (aspectRatio >= 1) {
         // landscape
         height = referenceHeight;
@@ -19574,7 +19579,7 @@ function computeResolution(resolution, aspectRatio) {
 
 ;// CONCATENATED MODULE: ./src/utils/utils.ts
 /*
- * MARTINS.js
+ * encantar.js
  * GPU-accelerated Augmented Reality for the web
  * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
  *
@@ -19607,7 +19612,7 @@ class Utils {
      * @param args optional additional messages
      */
     static log(message, ...args) {
-        console.log('[martins-js]', message, ...args);
+        console.log('[encantar-js]', message, ...args);
     }
     /**
      * Display a warning
@@ -19615,7 +19620,7 @@ class Utils {
      * @param args optional additional messages
      */
     static warning(message, ...args) {
-        console.warn('[martins-js]', message, ...args);
+        console.warn('[encantar-js]', message, ...args);
     }
     /**
      * Display an error message
@@ -19623,7 +19628,7 @@ class Utils {
      * @param args optional additional messages
      */
     static error(message, ...args) {
-        console.error('[martins-js]', message, ...args);
+        console.error('[encantar-js]', message, ...args);
     }
     /**
      * Assertion
@@ -19721,7 +19726,7 @@ class Utils {
 
 ;// CONCATENATED MODULE: ./src/utils/ar-events.ts
 /*
- * MARTINS.js
+ * encantar.js
  * GPU-accelerated Augmented Reality for the web
  * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
  *
@@ -19796,779 +19801,9 @@ class AREventTarget {
     }
 }
 
-;// CONCATENATED MODULE: ./src/core/hud.ts
-/*
- * MARTINS.js
- * GPU-accelerated Augmented Reality for the web
- * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published
- * by the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
- * hud.ts
- * Heads Up Display
- */
-
-
-/**
- * Heads Up Display: an overlay displayed in front of the augmented scene
- */
-class HUD {
-    /**
-     * Constructor
-     * @param parent parent of the hud container
-     * @param hudContainer an existing hud container (optional)
-     */
-    constructor(parent, hudContainer) {
-        this._container = hudContainer || this._createContainer(parent);
-        this._ownContainer = (hudContainer == null);
-        // validate
-        if (this._container.parentElement !== parent)
-            throw new IllegalArgumentError('The container of the HUD must be a direct child of the container of the viewport');
-        // the HUD should be hidden initially
-        if (!this._container.hidden)
-            Utils.warning(`The container of the HUD should have the hidden attribute`);
-    }
-    /**
-     * The container of the HUD
-     */
-    get container() {
-        return this._container;
-    }
-    /**
-     * Whether or not the HUD is visible
-     */
-    get visible() {
-        return !this._container.hidden;
-    }
-    /**
-     * Whether or not the HUD is visible
-     */
-    set visible(visible) {
-        this._container.hidden = !visible;
-    }
-    /**
-     * Initialize the HUD
-     * @param zIndex the z-index of the container
-     * @internal
-     */
-    _init(zIndex) {
-        const container = this._container;
-        container.style.position = 'absolute';
-        container.style.left = container.style.top = '0px';
-        container.style.right = container.style.bottom = '0px';
-        container.style.padding = container.style.margin = '0px';
-        container.style.zIndex = String(zIndex);
-        container.style.userSelect = 'none';
-    }
-    /**
-     * Release the HUD
-     * @internal
-     */
-    _release() {
-        if (this._ownContainer) {
-            this._ownContainer = false;
-            this._container.remove();
-        }
-    }
-    /**
-     * Create a HUD container as an immediate child of the input node
-     * @param parent parent container
-     * @returns HUD container
-     */
-    _createContainer(parent) {
-        const node = document.createElement('div');
-        node.hidden = true;
-        parent.appendChild(node);
-        return node;
-    }
-}
-
-;// CONCATENATED MODULE: ./src/core/viewport.ts
-/*
- * MARTINS.js
- * GPU-accelerated Augmented Reality for the web
- * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published
- * by the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
- * viewport.ts
- * Viewport
- */
-
-
-
-
-
-/** An event emitted by a Viewport */
-class ViewportEvent extends AREvent {
-}
-/** Viewport event target */
-class ViewportEventTarget extends AREventTarget {
-}
-/** Default viewport constructor settings */
-const DEFAULT_VIEWPORT_SETTINGS = {
-    container: null,
-    hudContainer: null,
-    resolution: 'lg',
-    style: 'best-fit',
-    canvas: null,
-};
-/** Z-index of the viewport container */
-const CONTAINER_ZINDEX = 1000000000;
-/** Base z-index of the children of the viewport container */
-const BASE_ZINDEX = 0;
-/** Z-index of the background canvas */
-const BACKGROUND_ZINDEX = BASE_ZINDEX + 0;
-/** Z-index of the foreground canvas */
-const FOREGROUND_ZINDEX = BASE_ZINDEX + 1;
-/** Z-index of the HUD */
-const HUD_ZINDEX = BASE_ZINDEX + 2;
-/** Default viewport width, in pixels */
-const DEFAULT_VIEWPORT_WIDTH = 300;
-/** Default viewport height, in pixels */
-const DEFAULT_VIEWPORT_HEIGHT = 150;
-/**
- * Viewport
- */
-class BaseViewport extends ViewportEventTarget {
-    /**
-     * Constructor
-     * @param viewportSettings
-     */
-    constructor(viewportSettings) {
-        super();
-        const settings = Object.assign({}, DEFAULT_VIEWPORT_SETTINGS, viewportSettings);
-        const size = speedy_vision_default().Size(DEFAULT_VIEWPORT_WIDTH, DEFAULT_VIEWPORT_HEIGHT);
-        // validate settings
-        if (settings.container == null)
-            throw new IllegalArgumentError('Unspecified viewport container');
-        else if (!(settings.container instanceof HTMLElement))
-            throw new IllegalArgumentError('Invalid viewport container');
-        // initialize attributes
-        this._resolution = settings.resolution;
-        this._container = settings.container;
-        this._hud = new HUD(settings.container, settings.hudContainer);
-        // make this more elegant?
-        // need to initialize this._style and validate settings.style
-        this._style = DEFAULT_VIEWPORT_SETTINGS.style;
-        this.style = settings.style;
-        // create the background canvas
-        this.__backgroundCanvas = this._createBackgroundCanvas(this._container, size);
-        // create the foreground canvas
-        if (settings.canvas == null) {
-            this._foregroundCanvas = this._createForegroundCanvas(this._container, size);
-            this._parentOfImportedForegroundCanvas = null;
-        }
-        else {
-            this._foregroundCanvas = settings.canvas;
-            this._parentOfImportedForegroundCanvas = settings.canvas.parentNode;
-        }
-    }
-    /**
-     * Make a request to the user agent so that the viewport container is
-     * displayed in fullscreen mode. The container must be a compatible element[1]
-     * and the user must interact with the page in order to comply with browser
-     * policies[2]. In case of error, the returned promise is rejected.
-     * [1] https://developer.mozilla.org/en-US/docs/Web/API/Element/requestFullscreen#compatible_elements
-     * [2] https://developer.mozilla.org/en-US/docs/Web/API/Element/requestFullscreen#security
-     */
-    requestFullscreen() {
-        const container = this._container;
-        // fallback for older WebKit versions
-        if (container.requestFullscreen === undefined) {
-            if (container.webkitRequestFullscreen === undefined)
-                return speedy_vision_default().Promise.reject(new NotSupportedError());
-            else if (!document.webkitFullscreenEnabled)
-                return speedy_vision_default().Promise.reject(new AccessDeniedError());
-            // webkitRequestFullscreen() does not return a value
-            container.webkitRequestFullscreen();
-            return new (speedy_vision_default()).Promise((resolve, reject) => {
-                setTimeout(() => {
-                    if (container === document.webkitFullscreenElement) {
-                        Utils.log('Entering fullscreen mode...');
-                        resolve();
-                    }
-                    else
-                        reject(new TypeError());
-                }, 100);
-            });
-        }
-        // check if the fullscreen mode is available
-        if (!document.fullscreenEnabled)
-            return speedy_vision_default().Promise.reject(new AccessDeniedError());
-        // request fullscreen
-        return new (speedy_vision_default()).Promise((resolve, reject) => {
-            container.requestFullscreen({
-                navigationUI: 'hide'
-            }).then(() => {
-                Utils.log('Entering fullscreen mode...');
-                resolve();
-            }, reject);
-        });
-    }
-    /**
-     * Exit fullscreen mode
-     */
-    exitFullscreen() {
-        // fallback for older WebKit versions
-        if (document.exitFullscreen === undefined) {
-            const doc = document;
-            if (doc.webkitExitFullscreen === undefined)
-                return speedy_vision_default().Promise.reject(new NotSupportedError());
-            else if (doc.webkitFullscreenElement === null)
-                return speedy_vision_default().Promise.reject(new IllegalOperationError('Not in fullscreen mode'));
-            // webkitExitFullscreen() does not return a value
-            doc.webkitExitFullscreen();
-            return new (speedy_vision_default()).Promise((resolve, reject) => {
-                setTimeout(() => {
-                    if (doc.webkitFullscreenElement === null) {
-                        Utils.log('Exiting fullscreen mode...');
-                        resolve();
-                    }
-                    else
-                        reject(new TypeError());
-                }, 100);
-            });
-        }
-        // error if not in fullscreen mode
-        if (document.fullscreenElement === null)
-            return speedy_vision_default().Promise.reject(new IllegalOperationError('Not in fullscreen mode'));
-        // exit fullscreen
-        return new (speedy_vision_default()).Promise((resolve, reject) => {
-            document.exitFullscreen().then(() => {
-                Utils.log('Exiting fullscreen mode...');
-                resolve();
-            }, reject);
-        });
-    }
-    /** Is the fullscreen mode available? */
-    isFullscreenAvailable() {
-        return document.fullscreenEnabled ||
-            !!(document.webkitFullscreenEnabled);
-    }
-    /**
-     * True if the viewport is being displayed in fullscreen mode
-     */
-    get fullscreen() {
-        if (document.fullscreenElement !== undefined)
-            return document.fullscreenElement === this._container;
-        else if (document.webkitFullscreenElement !== undefined)
-            return document.webkitFullscreenElement === this._container;
-        else
-            return false;
-    }
-    /**
-     * Viewport container
-     */
-    get container() {
-        return this._container;
-    }
-    /**
-     * Viewport style
-     */
-    get style() {
-        return this._style;
-    }
-    /**
-     * Set viewport style
-     */
-    set style(value) {
-        if (value != 'best-fit' && value != 'stretch' && value != 'inline')
-            throw new IllegalArgumentError('Invalid viewport style: ' + value);
-        const changed = (value != this._style);
-        this._style = value;
-        if (changed) {
-            const event = new ViewportEvent('resize');
-            this.dispatchEvent(event);
-        }
-    }
-    /**
-     * HUD
-     */
-    get hud() {
-        return this._hud;
-    }
-    /**
-     * Resolution of the virtual scene
-     */
-    get resolution() {
-        return this._resolution;
-    }
-    /**
-     * Size in pixels of the drawing buffer of the canvas
-     * on which the virtual scene will be drawn
-     */
-    get virtualSize() {
-        const aspectRatio = this._backgroundCanvas.width / this._backgroundCanvas.height;
-        return Utils.resolution(this._resolution, aspectRatio);
-    }
-    /**
-     * The canvas on which the virtual scene will be drawn
-     */
-    get canvas() {
-        return this._foregroundCanvas;
-    }
-    /**
-     * The canvas on which the physical scene will be drawn
-     * @internal
-     */
-    get _backgroundCanvas() {
-        return this.__backgroundCanvas;
-    }
-    /**
-     * Size of the drawing buffer of the background canvas, in pixels
-     * @internal
-     */
-    get _realSize() {
-        throw new IllegalOperationError();
-    }
-    /**
-     * Initialize the viewport (when the session starts)
-     * @internal
-     */
-    _init() {
-        // import foreground canvas
-        if (this._parentOfImportedForegroundCanvas != null) {
-            const size = speedy_vision_default().Size(DEFAULT_VIEWPORT_WIDTH, DEFAULT_VIEWPORT_HEIGHT);
-            this._importForegroundCanvas(this._foregroundCanvas, this._container, size);
-        }
-        // setup CSS
-        this._container.style.touchAction = 'none';
-        this._container.style.backgroundColor = 'black';
-        this._container.style.zIndex = String(CONTAINER_ZINDEX);
-        // initialize the HUD
-        this._hud._init(HUD_ZINDEX);
-        this._hud.visible = true;
-    }
-    /**
-     * Release the viewport (when the session starts)
-     * @internal
-     */
-    _release() {
-        // release the HUD
-        this._hud._release();
-        // reset the CSS
-        this._container.style.touchAction = 'auto';
-        // restore imported canvas
-        if (this._parentOfImportedForegroundCanvas != null)
-            this._restoreImportedForegroundCanvas();
-    }
-    /**
-     * Create a canvas and attach it to another HTML element
-     * @param parent parent container
-     * @param size size of the drawing buffer
-     * @returns a new canvas as a child of parent
-     */
-    _createCanvas(parent, size) {
-        const canvas = document.createElement('canvas');
-        canvas.width = size.width;
-        canvas.height = size.height;
-        parent.appendChild(canvas);
-        return canvas;
-    }
-    /**
-     * Create the background canvas
-     * @param parent parent container
-     * @param size size of the drawing buffer
-     * @returns a new canvas as a child of parent
-     */
-    _createBackgroundCanvas(parent, size) {
-        const canvas = this._createCanvas(parent, size);
-        return this._styleCanvas(canvas, BACKGROUND_ZINDEX);
-    }
-    /**
-     * Create the foreground canvas
-     * @param parent parent container
-     * @param size size of the drawing buffer
-     * @returns a new canvas as a child of parent
-     */
-    _createForegroundCanvas(parent, size) {
-        const canvas = this._createCanvas(parent, size);
-        return this._styleCanvas(canvas, FOREGROUND_ZINDEX);
-    }
-    /**
-     * Import an existing foreground canvas to the viewport
-     * @param canvas existing canvas
-     * @param parent parent container
-     * @param size size of the drawing buffer
-     * @returns the input canvas
-     */
-    _importForegroundCanvas(canvas, parent, size) {
-        if (!(canvas instanceof HTMLCanvasElement))
-            throw new IllegalArgumentError('Not a canvas: ' + canvas);
-        // borrow the canvas; add it as a child of the viewport container
-        canvas.remove();
-        parent.appendChild(canvas);
-        canvas.width = size.width;
-        canvas.height = size.height;
-        canvas.dataset.cssText = canvas.style.cssText; // save CSS
-        canvas.style.cssText = ''; // clear CSS
-        this._styleCanvas(canvas, FOREGROUND_ZINDEX);
-        return canvas;
-    }
-    /**
-     * Restore a previously imported foreground canvas to its original parent
-     */
-    _restoreImportedForegroundCanvas() {
-        // not an imported canvas; nothing to do
-        if (this._parentOfImportedForegroundCanvas == null)
-            throw new IllegalOperationError();
-        const canvas = this._foregroundCanvas;
-        canvas.style.cssText = canvas.dataset.cssText || ''; // restore CSS
-        canvas.remove();
-        this._parentOfImportedForegroundCanvas.appendChild(canvas);
-    }
-    /**
-     * Add suitable CSS rules to a canvas
-     * @param canvas
-     * @param canvasType
-     * @returns canvas
-     */
-    _styleCanvas(canvas, zIndex) {
-        canvas.style.position = 'absolute';
-        canvas.style.left = '0px';
-        canvas.style.top = '0px';
-        canvas.style.width = '100%';
-        canvas.style.height = '100%';
-        canvas.style.zIndex = String(zIndex);
-        return canvas;
-    }
-}
-/**
- * Viewport decorator
- */
-class ViewportDecorator extends ViewportEventTarget {
-    /**
-     * Constructor
-     * @param base to be decorated
-     * @param getSize size getter
-     */
-    constructor(base, getSize) {
-        super();
-        this._base = base;
-        this._getSize = getSize;
-    }
-    /**
-     * Viewport container
-     */
-    get container() {
-        return this._base.container;
-    }
-    /**
-     * Viewport style
-     */
-    get style() {
-        return this._base.style;
-    }
-    /**
-     * Set viewport style
-     */
-    set style(value) {
-        this._base.style = value;
-    }
-    /**
-     * HUD
-     */
-    get hud() {
-        return this._base.hud;
-    }
-    /**
-     * Fullscreen mode
-     */
-    get fullscreen() {
-        return this._base.fullscreen;
-    }
-    /**
-     * Resolution of the virtual scene
-     */
-    get resolution() {
-        return this._base.resolution;
-    }
-    /**
-     * Size in pixels of the drawing buffer of the canvas
-     * on which the virtual scene will be drawn
-     */
-    get virtualSize() {
-        return this._base.virtualSize;
-    }
-    /**
-     * The canvas on which the virtual scene will be drawn
-     */
-    get canvas() {
-        return this._base.canvas;
-    }
-    /**
-     * Request fullscreen mode
-     */
-    requestFullscreen() {
-        return this._base.requestFullscreen();
-    }
-    /**
-     * Exit fullscreen mode
-     */
-    exitFullscreen() {
-        return this._base.exitFullscreen();
-    }
-    /**
-     * Is the fullscreen mode available?
-     */
-    isFullscreenAvailable() {
-        return this._base.isFullscreenAvailable();
-    }
-    /**
-     * Background canvas
-     * @internal
-     */
-    get _backgroundCanvas() {
-        return this._base._backgroundCanvas;
-    }
-    /**
-     * Size of the drawing buffer of the background canvas, in pixels
-     * @internal
-     */
-    get _realSize() {
-        return this._getSize();
-    }
-    /**
-     * Initialize the viewport
-     * @internal
-     */
-    _init() {
-        this._base._init();
-    }
-    /**
-     * Release the viewport
-     * @internal
-     */
-    _release() {
-        this._base._release();
-    }
-    /**
-     * Add event listener
-     * @param type event type
-     * @param callback
-     */
-    addEventListener(type, callback) {
-        this._base.addEventListener(type, callback);
-    }
-    /**
-     * Remove event listener
-     * @param type event type
-     * @param callback
-     */
-    removeEventListener(type, callback) {
-        this._base.removeEventListener(type, callback);
-    }
-    /**
-     * Synchronously trigger an event
-     * @param event
-     * @returns same value as a standard event target
-     * @internal
-     */
-    dispatchEvent(event) {
-        return this._base.dispatchEvent(event);
-    }
-}
-/**
- * A viewport that watches for page resizes
- */
-class ResizableViewport extends ViewportDecorator {
-    /**
-     * Constructor
-     * @param base to be decorated
-     * @param getSize size getter
-     */
-    constructor(base, getSize) {
-        super(base, getSize);
-        this._active = false;
-        this.addEventListener('resize', this._onResize.bind(this));
-    }
-    /**
-     * Initialize the viewport
-     * @internal
-     */
-    _init() {
-        super._init();
-        this._active = true;
-        // Configure the resize listener. We want the viewport
-        // to adjust itself if the phone/screen is resized or
-        // changes orientation
-        let timeout = null;
-        const onWindowResize = () => {
-            if (!this._active) {
-                window.removeEventListener('resize', onWindowResize);
-                return;
-            }
-            if (timeout !== null)
-                clearTimeout(timeout);
-            timeout = setTimeout(() => {
-                timeout = null;
-                this._resize();
-            }, 50);
-        };
-        window.addEventListener('resize', onWindowResize);
-        // handle changes of orientation
-        // (is this needed? we already listen to resize events)
-        if (screen.orientation !== undefined)
-            screen.orientation.addEventListener('change', this._resize.bind(this));
-        else
-            window.addEventListener('orientationchange', this._resize.bind(this)); // deprecated
-        // trigger a resize to setup the sizes / the CSS
-        this._resize();
-    }
-    /**
-     * Release the viewport
-     * @internal
-     */
-    _release() {
-        if (screen.orientation !== undefined)
-            screen.orientation.removeEventListener('change', this._resize);
-        else
-            window.removeEventListener('orientationchange', this._resize); // deprecated
-        this._active = false;
-        super._release();
-    }
-    /**
-     * Trigger a resize event
-     */
-    _resize() {
-        const event = new ViewportEvent('resize');
-        this.dispatchEvent(event);
-    }
-    /**
-     * Function to be called when the viewport is resized
-     */
-    _onResize() {
-        // Resize the drawing buffer of the foreground canvas, so that it
-        // matches the desired resolution, as well as the aspect ratio of the
-        // background canvas
-        const foregroundCanvas = this.canvas;
-        const virtualSize = this.virtualSize;
-        foregroundCanvas.width = virtualSize.width;
-        foregroundCanvas.height = virtualSize.height;
-        // Resize the drawing buffer of the background canvas
-        const backgroundCanvas = this._backgroundCanvas;
-        const realSize = this._realSize;
-        backgroundCanvas.width = realSize.width;
-        backgroundCanvas.height = realSize.height;
-    }
-}
-/**
- * Immersive viewport: it occupies the entire page
- */
-class ImmersiveViewport extends ResizableViewport {
-    /**
-     * Release the viewport
-     * @internal
-     */
-    _release() {
-        this.canvas.remove();
-        this._backgroundCanvas.remove();
-        this.hud.visible = false;
-        this.container.style.cssText = ''; // reset CSS
-        super._release();
-    }
-    /**
-     * Resize the immersive viewport, so that it occupies the entire page.
-     * We respect the aspect ratio of the source media
-     */
-    _onResize() {
-        super._onResize();
-        const container = this.container;
-        container.style.position = 'fixed';
-        if (this.style == 'best-fit') {
-            // cover the page while maintaining the aspect ratio
-            let viewportWidth = 0, viewportHeight = 0;
-            const windowAspectRatio = window.innerWidth / window.innerHeight;
-            const viewportAspectRatio = this._realSize.width / this._realSize.height;
-            if (viewportAspectRatio <= windowAspectRatio) {
-                viewportHeight = window.innerHeight;
-                viewportWidth = (viewportHeight * viewportAspectRatio) | 0;
-            }
-            else {
-                viewportWidth = window.innerWidth;
-                viewportHeight = (viewportWidth / viewportAspectRatio) | 0;
-            }
-            container.style.left = `calc(50% - ${(viewportWidth + 1) >>> 1}px)`;
-            container.style.top = `calc(50% - ${(viewportHeight + 1) >>> 1}px)`;
-            container.style.width = viewportWidth + 'px';
-            container.style.height = viewportHeight + 'px';
-        }
-        else if (this.style == 'stretch') {
-            // stretch to cover the entire page
-            container.style.left = '0px';
-            container.style.top = '0px';
-            container.style.width = window.innerWidth + 'px';
-            container.style.height = window.innerHeight + 'px';
-        }
-        else
-            throw new IllegalOperationError('Invalid immersive viewport style: ' + this.style);
-    }
-}
-/**
- * Inline viewport: it follows the typical flow of a web page
- */
-class InlineViewport extends ResizableViewport {
-    /**
-     * Initialize the viewport
-     * @internal
-     */
-    _init() {
-        super._init();
-        this.style = 'inline';
-    }
-    /**
-     * Release the viewport
-     * @internal
-     */
-    _release() {
-        this.container.style.cssText = ''; // reset CSS
-        super._release();
-    }
-    /**
-     * Resize the inline viewport
-     * (we still take orientation changes into account)
-     */
-    _onResize() {
-        super._onResize();
-        const container = this.container;
-        container.style.position = 'relative';
-        if (this.style == 'inline') {
-            container.style.left = '0px';
-            container.style.top = '0px';
-            container.style.width = this.virtualSize.width + 'px';
-            container.style.height = this.virtualSize.height + 'px';
-        }
-        else
-            throw new IllegalOperationError('Invalid inline viewport style: ' + this.style);
-    }
-}
-
 ;// CONCATENATED MODULE: ./src/core/stats.ts
 /*
- * MARTINS.js
+ * encantar.js
  * GPU-accelerated Augmented Reality for the web
  * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
  *
@@ -20639,7 +19874,7 @@ class Stats {
 
 ;// CONCATENATED MODULE: ./src/core/stats-panel.ts
 /*
- * MARTINS.js
+ * encantar.js
  * GPU-accelerated Augmented Reality for the web
  * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
  *
@@ -20775,19 +20010,44 @@ class StatsPanel {
      */
     _createContainer() {
         const container = document.createElement('div');
-        const print = (html) => container.insertAdjacentHTML('beforeend', html);
         container.style.position = 'absolute';
         container.style.left = container.style.top = '0px';
         container.style.zIndex = '1000000';
-        container.style.padding = '4px';
-        container.style.whiteSpace = 'pre-line';
-        container.style.backgroundColor = 'rgba(0,0,0,0.5)';
-        container.style.color = 'white';
-        container.style.fontFamily = 'monospace';
-        container.style.fontSize = '14px';
+        container.style.padding = '0px';
+        container.appendChild(this._createTitle());
+        container.appendChild(this._createContent());
+        return container;
+    }
+    /**
+     * Create a title
+     * @returns a title
+     */
+    _createTitle() {
+        const title = document.createElement('div');
+        title.style.backgroundColor = '#7e56c2';
+        title.style.color = 'white';
+        title.style.fontFamily = 'monospace';
+        title.style.fontSize = '14px';
+        title.style.fontWeight = 'bold';
+        title.style.padding = '2px';
+        title.innerHTML = '&#x2728;';
+        title.innerText += 'encantAR.js ' + AR.version;
+        return title;
+    }
+    /**
+     * Create a content container
+     * @returns a content container
+     */
+    _createContent() {
+        const content = document.createElement('div');
+        const print = (html) => content.insertAdjacentHTML('beforeend', html);
+        content.style.backgroundColor = 'rgba(0,0,0,0.5)';
+        content.style.color = 'white';
+        content.style.fontFamily = 'monospace';
+        content.style.fontSize = '14px';
+        content.style.padding = '2px';
+        content.style.whiteSpace = 'pre-line';
         // all sanitized
-        container.innerText = 'MARTINS.js ' + Martins.version;
-        print('<br>');
         print('FPS: <span class="_ar_fps"></span> | ');
         print('GPU: <span class="_ar_gpu"></span> ');
         print('<span class="_ar_power"></span>');
@@ -20795,11 +20055,11 @@ class StatsPanel {
         print('IN: <span class="_ar_in"></span>');
         print('<br>');
         print('OUT: <span class="_ar_out"></span>');
-        if (this._viewport.isFullscreenAvailable()) {
+        if (this._viewport.fullscreenAvailable) {
             print('<br>');
-            container.appendChild(this._createFullscreenToggle());
+            content.appendChild(this._createFullscreenToggle());
         }
-        return container;
+        return content;
     }
     /**
      * Create a fullscreen toggle
@@ -20828,7 +20088,7 @@ class StatsPanel {
 
 ;// CONCATENATED MODULE: ./src/core/frame.ts
 /*
- * MARTINS.js
+ * encantar.js
  * GPU-accelerated Augmented Reality for the web
  * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
  *
@@ -20895,7 +20155,7 @@ class Frame {
 
 ;// CONCATENATED MODULE: ./src/core/time.ts
 /*
- * MARTINS.js
+ * encantar.js
  * GPU-accelerated Augmented Reality for the web
  * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
  *
@@ -20986,7 +20246,7 @@ class Time {
 
 ;// CONCATENATED MODULE: ./src/core/gizmos.ts
 /*
- * MARTINS.js
+ * encantar.js
  * GPU-accelerated Augmented Reality for the web
  * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
  *
@@ -21180,7 +20440,7 @@ class Gizmos {
         [ 1  1  1  1 ]
 
         Each column of the resulting matrix will give us the pixel coordinates
-        we're looking for.
+        we're looking for: origin and the axes.
 
         Note: we're working with homogeneous coordinates
 
@@ -21210,7 +20470,7 @@ class Gizmos {
 
 ;// CONCATENATED MODULE: ./src/utils/asap.ts
 /*
- * MARTINS.js
+ * encantar.js
  * GPU-accelerated Augmented Reality for the web
  * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
  *
@@ -21260,7 +20520,7 @@ function asap(fn, ...params) {
 
 ;// CONCATENATED MODULE: ./src/core/session.ts
 /*
- * MARTINS.js
+ * encantar.js
  * GPU-accelerated Augmented Reality for the web
  * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
  *
@@ -21280,7 +20540,6 @@ function asap(fn, ...params) {
  * session.ts
  * WebAR Session
  */
-
 
 
 
@@ -21330,16 +20589,27 @@ class Session extends AREventTarget {
         this._time = new Time();
         this._gizmos = new Gizmos();
         this._gizmos.visible = gizmos;
-        // get media
-        const media = this.media;
-        // setup the viewport
-        if (mode == 'immersive')
-            this._viewport = new ImmersiveViewport(viewport, () => media.size);
-        else if (mode == 'inline')
-            this._viewport = new InlineViewport(viewport, () => media.size);
+        // validate the mode
+        if (mode == 'immersive') {
+            if (viewport.style != 'best-fit' && viewport.style != 'stretch') {
+                Utils.warning(`Invalid viewport style \"${viewport.style}\" for the \"${mode}\" mode`);
+                viewport.style = 'best-fit';
+            }
+        }
+        else if (mode == 'inline') {
+            if (viewport.style != 'inline') {
+                Utils.warning(`Invalid viewport style \"${viewport.style}\" for the \"${mode}\" mode`);
+                viewport.style = 'inline';
+            }
+        }
         else
             throw new IllegalArgumentError(`Invalid session mode "${mode}"`);
-        this._viewport._init();
+        // get media
+        const media = this.media;
+        const getMediaSize = () => media.size;
+        // setup the viewport
+        this._viewport = viewport;
+        this._viewport._init(getMediaSize);
         // setup the main loop
         this._setupUpdateLoop();
         this._setupRenderLoop();
@@ -21422,7 +20692,7 @@ class Session extends AREventTarget {
         return speedy_vision_default().Promise.resolve().then(() => {
             // is the engine supported?
             if (!Session.isSupported())
-                throw new NotSupportedError('You need a browser/device compatible with WebGL2 and WebAssembly in order to experience Augmented Reality with the MARTINS.js engine');
+                throw new NotSupportedError('You need a browser/device compatible with WebGL2 and WebAssembly in order to experience Augmented Reality with encantar.js');
             // block multiple immersive sessions
             if (mode !== 'inline' && Session.count > 0)
                 throw new IllegalOperationError(`Can't start more than one immersive session`);
@@ -21731,7 +21001,7 @@ Session._count = 0;
 
 ;// CONCATENATED MODULE: ./src/core/settings.ts
 /*
- * MARTINS.js
+ * encantar.js
  * GPU-accelerated Augmented Reality for the web
  * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
  *
@@ -21801,7 +21071,7 @@ Settings._powerPreference = 'default';
 
 ;// CONCATENATED MODULE: ./src/trackers/image-tracker/reference-image-database.ts
 /*
- * MARTINS.js
+ * encantar.js
  * GPU-accelerated Augmented Reality for the web
  * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
  *
@@ -21931,7 +21201,7 @@ class ReferenceImageDatabase {
 
 ;// CONCATENATED MODULE: ./src/trackers/image-tracker/settings.ts
 /*
- * MARTINS.js
+ * encantar.js
  * GPU-accelerated Augmented Reality for the web
  * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
  *
@@ -22026,7 +21296,7 @@ const TRACK_LOST_TOLERANCE = 10;
 
 ;// CONCATENATED MODULE: ./src/trackers/image-tracker/states/state.ts
 /*
- * MARTINS.js
+ * encantar.js
  * GPU-accelerated Augmented Reality for the web
  * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
  *
@@ -22244,7 +21514,7 @@ class ImageTrackerState {
 
 ;// CONCATENATED MODULE: ./src/trackers/image-tracker/states/initial.ts
 /*
- * MARTINS.js
+ * encantar.js
  * GPU-accelerated Augmented Reality for the web
  * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
  *
@@ -22400,7 +21670,7 @@ class ImageTrackerInitialState extends ImageTrackerState {
 
 ;// CONCATENATED MODULE: ./src/trackers/image-tracker/states/training.ts
 /*
- * MARTINS.js
+ * encantar.js
  * GPU-accelerated Augmented Reality for the web
  * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
  *
@@ -22679,7 +21949,7 @@ class ImageTrackerTrainingState extends ImageTrackerState {
 
 ;// CONCATENATED MODULE: ./src/trackers/image-tracker/states/scanning.ts
 /*
- * MARTINS.js
+ * encantar.js
  * GPU-accelerated Augmented Reality for the web
  * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
  *
@@ -22996,7 +22266,7 @@ class ImageTrackerScanningState extends ImageTrackerState {
 
 ;// CONCATENATED MODULE: ./src/trackers/image-tracker/states/pre-tracking.ts
 /*
- * MARTINS.js
+ * encantar.js
  * GPU-accelerated Augmented Reality for the web
  * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
  *
@@ -23365,7 +22635,7 @@ class ImageTrackerPreTrackingState extends ImageTrackerState {
 
 ;// CONCATENATED MODULE: ./src/trackers/image-tracker/image-tracker-event.ts
 /*
- * MARTINS.js
+ * encantar.js
  * GPU-accelerated Augmented Reality for the web
  * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
  *
@@ -23409,7 +22679,7 @@ class ImageTrackerEvent extends AREvent {
 
 ;// CONCATENATED MODULE: ./src/geometry/camera-model.ts
 /*
- * MARTINS.js
+ * encantar.js
  * GPU-accelerated Augmented Reality for the web
  * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
  *
@@ -24138,7 +23408,7 @@ class CameraModel {
 
 ;// CONCATENATED MODULE: ./src/geometry/pose.ts
 /*
- * MARTINS.js
+ * encantar.js
  * GPU-accelerated Augmented Reality for the web
  * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
  *
@@ -24181,7 +23451,7 @@ class Pose {
 
 ;// CONCATENATED MODULE: ./src/geometry/transform.ts
 /*
- * MARTINS.js
+ * encantar.js
  * GPU-accelerated Augmented Reality for the web
  * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
  *
@@ -24323,7 +23593,7 @@ class RigidTransform extends StandardTransform {
 
 ;// CONCATENATED MODULE: ./src/geometry/viewer-pose.ts
 /*
- * MARTINS.js
+ * encantar.js
  * GPU-accelerated Augmented Reality for the web
  * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
  *
@@ -24412,7 +23682,7 @@ class ViewerPose extends Pose {
 
 ;// CONCATENATED MODULE: ./src/geometry/view.ts
 /*
- * MARTINS.js
+ * encantar.js
  * GPU-accelerated Augmented Reality for the web
  * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
  *
@@ -24517,7 +23787,7 @@ class PerspectiveView {
 
 ;// CONCATENATED MODULE: ./src/geometry/viewer.ts
 /*
- * MARTINS.js
+ * encantar.js
  * GPU-accelerated Augmented Reality for the web
  * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
  *
@@ -24595,7 +23865,7 @@ class Viewer {
 
 ;// CONCATENATED MODULE: ./src/trackers/image-tracker/states/tracking.ts
 /*
- * MARTINS.js
+ * encantar.js
  * GPU-accelerated Augmented Reality for the web
  * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
  *
@@ -25260,7 +24530,7 @@ class ImageTrackerTrackingState extends ImageTrackerState {
 
 ;// CONCATENATED MODULE: ./src/trackers/image-tracker/image-tracker.ts
 /*
- * MARTINS.js
+ * encantar.js
  * GPU-accelerated Augmented Reality for the web
  * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
  *
@@ -25460,7 +24730,7 @@ class ImageTracker extends AREventTarget {
 
 ;// CONCATENATED MODULE: ./src/trackers/tracker-factory.ts
 /*
- * MARTINS.js
+ * encantar.js
  * GPU-accelerated Augmented Reality for the web
  * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
  *
@@ -25495,7 +24765,7 @@ class TrackerFactory {
 
 ;// CONCATENATED MODULE: ./src/sources/video-source.ts
 /*
- * MARTINS.js
+ * encantar.js
  * GPU-accelerated Augmented Reality for the web
  * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
  *
@@ -25715,7 +24985,7 @@ class VideoSource {
 
 ;// CONCATENATED MODULE: ./src/sources/canvas-source.ts
 /*
- * MARTINS.js
+ * encantar.js
  * GPU-accelerated Augmented Reality for the web
  * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
  *
@@ -25803,7 +25073,7 @@ class CanvasSource {
 
 ;// CONCATENATED MODULE: ./src/sources/camera-source.ts
 /*
- * MARTINS.js
+ * encantar.js
  * GPU-accelerated Augmented Reality for the web
  * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
  *
@@ -25918,7 +25188,7 @@ class CameraSource extends VideoSource {
 
 ;// CONCATENATED MODULE: ./src/sources/source-factory.ts
 /*
- * MARTINS.js
+ * encantar.js
  * GPU-accelerated Augmented Reality for the web
  * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
  *
@@ -25968,9 +25238,750 @@ class SourceFactory {
     }
 }
 
+;// CONCATENATED MODULE: ./src/core/hud.ts
+/*
+ * encantar.js
+ * GPU-accelerated Augmented Reality for the web
+ * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * hud.ts
+ * Heads Up Display
+ */
+
+/**
+ * Heads Up Display: an overlay displayed in front of the augmented scene
+ */
+class HUD {
+    /**
+     * Constructor
+     * @param parent parent of the hud container
+     * @param hudContainer an existing hud container (optional)
+     */
+    constructor(parent, hudContainer) {
+        this._container = hudContainer || this._createContainer(parent);
+        this._isOwnContainer = (hudContainer == null);
+        // move the HUD container to the parent node
+        if (this._container.parentElement !== parent) {
+            this._container.remove();
+            parent.insertAdjacentElement('afterbegin', this._container);
+        }
+        // the HUD should be hidden initially
+        if (!this._container.hidden) {
+            Utils.warning(`The container of the HUD should have the hidden attribute`);
+            this._container.hidden = true;
+        }
+    }
+    /**
+     * The container of the HUD
+     */
+    get container() {
+        return this._container;
+    }
+    /**
+     * Whether or not the HUD is visible
+     */
+    get visible() {
+        return !this._container.hidden;
+    }
+    /**
+     * Whether or not the HUD is visible
+     */
+    set visible(visible) {
+        this._container.hidden = !visible;
+    }
+    /**
+     * Initialize the HUD
+     * @param zIndex the z-index of the container
+     * @internal
+     */
+    _init(zIndex) {
+        const container = this._container;
+        container.style.position = 'absolute';
+        container.style.left = container.style.top = '0px';
+        container.style.right = container.style.bottom = '0px';
+        container.style.padding = container.style.margin = '0px';
+        container.style.zIndex = String(zIndex);
+        container.style.userSelect = 'none';
+        this.visible = true;
+    }
+    /**
+     * Release the HUD
+     * @internal
+     */
+    _release() {
+        if (this._isOwnContainer) {
+            this._isOwnContainer = false;
+            this._container.remove();
+        }
+    }
+    /**
+     * Create a HUD container as an immediate child of the input node
+     * @param parent parent container
+     * @returns HUD container
+     */
+    _createContainer(parent) {
+        const node = document.createElement('div');
+        node.hidden = true;
+        parent.insertAdjacentElement('afterbegin', node);
+        return node;
+    }
+}
+
+;// CONCATENATED MODULE: ./src/core/viewport.ts
+/*
+ * encantar.js
+ * GPU-accelerated Augmented Reality for the web
+ * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * viewport.ts
+ * Viewport
+ */
+
+
+
+
+
+/** An event emitted by a Viewport */
+class ViewportEvent extends AREvent {
+}
+/** Viewport event target */
+class ViewportEventTarget extends AREventTarget {
+}
+/** Default viewport constructor settings */
+const DEFAULT_VIEWPORT_SETTINGS = {
+    container: null,
+    hudContainer: null,
+    resolution: 'lg',
+    style: 'best-fit',
+    canvas: null,
+};
+/** Base z-index of the children of the viewport container */
+const BASE_ZINDEX = 0;
+/** Z-index of the background canvas */
+const BACKGROUND_ZINDEX = BASE_ZINDEX + 0;
+/** Z-index of the foreground canvas */
+const FOREGROUND_ZINDEX = BASE_ZINDEX + 1;
+/** Z-index of the HUD */
+const HUD_ZINDEX = BASE_ZINDEX + 2;
+/**
+ * Helper class to work with the containers of the viewport
+ */
+class ViewportContainers {
+    /**
+     * Constructor
+     * @param container viewport container
+     */
+    constructor(container) {
+        // validate
+        if (container == null)
+            throw new IllegalArgumentError('Unspecified viewport container');
+        else if (!(container instanceof HTMLElement))
+            throw new IllegalArgumentError('Invalid viewport container');
+        // store the viewport container
+        this._container = container;
+        // create the sub-container
+        this._subContainer = document.createElement('div');
+        container.appendChild(this._subContainer);
+    }
+    /**
+     * The viewport container
+     */
+    get container() {
+        return this._container;
+    }
+    /**
+     * The sub-container
+     */
+    get subContainer() {
+        return this._subContainer;
+    }
+    /**
+     * Initialize
+     */
+    init() {
+        this._container.style.touchAction = 'none';
+        this._container.style.backgroundColor = 'black';
+    }
+    /**
+     * Release
+     */
+    release() {
+        this._container.style.backgroundColor = 'initial';
+        this._container.style.touchAction = 'auto';
+    }
+}
+/**
+ * Helper class to work with the canvases of the viewport
+ */
+class ViewportCanvases {
+    /**
+     * Constructor
+     * @param parent container for the canvases
+     * @param initialSize initial size of the canvases
+     * @param fgCanvas optional existing foreground canvas
+     */
+    constructor(parent, initialSize, fgCanvas = null) {
+        if (fgCanvas !== null && !(fgCanvas instanceof HTMLCanvasElement))
+            throw new IllegalArgumentError('Not a canvas: ' + fgCanvas);
+        this._originalCSSTextOfForegroundCanvas = fgCanvas ? fgCanvas.style.cssText : '';
+        this._foregroundCanvas = this._styleCanvas(fgCanvas || this._createCanvas(initialSize), FOREGROUND_ZINDEX);
+        this._backgroundCanvas = this._styleCanvas(this._createCanvas(initialSize), BACKGROUND_ZINDEX);
+        parent.appendChild(this._backgroundCanvas);
+        parent.appendChild(this._foregroundCanvas);
+    }
+    /**
+     * The background canvas
+     */
+    get backgroundCanvas() {
+        return this._backgroundCanvas;
+    }
+    /**
+     * The foreground canvas
+     */
+    get foregroundCanvas() {
+        return this._foregroundCanvas;
+    }
+    /**
+     * Initialize
+     */
+    init() {
+    }
+    /**
+     * Release
+     */
+    release() {
+        this._backgroundCanvas.style.cssText = '';
+        this._foregroundCanvas.style.cssText = this._originalCSSTextOfForegroundCanvas;
+    }
+    /**
+     * Create a canvas
+     * @param size size of the drawing buffer
+     * @returns a new canvas
+     */
+    _createCanvas(size) {
+        const canvas = document.createElement('canvas');
+        canvas.width = size.width;
+        canvas.height = size.height;
+        return canvas;
+    }
+    /**
+     * Add suitable CSS rules to a canvas
+     * @param canvas
+     * @param zIndex
+     * @returns canvas
+     */
+    _styleCanvas(canvas, zIndex) {
+        canvas.style.position = 'absolute';
+        canvas.style.left = '0px';
+        canvas.style.top = '0px';
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        canvas.style.zIndex = String(zIndex);
+        return canvas;
+    }
+}
+/**
+ * Fullscreen utilities
+ */
+class ViewportFullscreenHelper {
+    /**
+     * Constructor
+     * @param _container the container which will be put in fullscreen
+     */
+    constructor(_container) {
+        this._container = _container;
+    }
+    /**
+     * Make a request to the user agent so that the viewport container is
+     * displayed in fullscreen mode. The container must be a compatible element[1]
+     * and the user must interact with the page in order to comply with browser
+     * policies[2]. In case of error, the returned promise is rejected.
+     * [1] https://developer.mozilla.org/en-US/docs/Web/API/Element/requestFullscreen#compatible_elements
+     * [2] https://developer.mozilla.org/en-US/docs/Web/API/Element/requestFullscreen#security
+     * @returns promise
+     */
+    request() {
+        const container = this._container;
+        // fallback for older WebKit versions
+        if (container.requestFullscreen === undefined) {
+            if (container.webkitRequestFullscreen === undefined)
+                return speedy_vision_default().Promise.reject(new NotSupportedError());
+            else if (!document.webkitFullscreenEnabled)
+                return speedy_vision_default().Promise.reject(new AccessDeniedError());
+            // webkitRequestFullscreen() does not return a value
+            container.webkitRequestFullscreen();
+            return new (speedy_vision_default()).Promise((resolve, reject) => {
+                setTimeout(() => {
+                    if (container === document.webkitFullscreenElement) {
+                        Utils.log('Entering fullscreen mode...');
+                        resolve();
+                    }
+                    else
+                        reject(new TypeError());
+                }, 100);
+            });
+        }
+        // check if the fullscreen mode is available
+        if (!document.fullscreenEnabled)
+            return speedy_vision_default().Promise.reject(new AccessDeniedError());
+        // request fullscreen
+        return new (speedy_vision_default()).Promise((resolve, reject) => {
+            container.requestFullscreen({
+                navigationUI: 'hide'
+            }).then(() => {
+                Utils.log('Entering fullscreen mode...');
+                resolve();
+            }, reject);
+        });
+    }
+    /**
+     * Exit fullscreen mode
+     * @returns promise
+     */
+    exit() {
+        // fallback for older WebKit versions
+        if (document.exitFullscreen === undefined) {
+            const doc = document;
+            if (doc.webkitExitFullscreen === undefined)
+                return speedy_vision_default().Promise.reject(new NotSupportedError());
+            else if (doc.webkitFullscreenElement === null)
+                return speedy_vision_default().Promise.reject(new IllegalOperationError('Not in fullscreen mode'));
+            // webkitExitFullscreen() does not return a value
+            doc.webkitExitFullscreen();
+            return new (speedy_vision_default()).Promise((resolve, reject) => {
+                setTimeout(() => {
+                    if (doc.webkitFullscreenElement === null) {
+                        Utils.log('Exiting fullscreen mode...');
+                        resolve();
+                    }
+                    else
+                        reject(new TypeError());
+                }, 100);
+            });
+        }
+        // error if not in fullscreen mode
+        if (document.fullscreenElement === null)
+            return speedy_vision_default().Promise.reject(new IllegalOperationError('Not in fullscreen mode'));
+        // exit fullscreen
+        return new (speedy_vision_default()).Promise((resolve, reject) => {
+            document.exitFullscreen().then(() => {
+                Utils.log('Exiting fullscreen mode...');
+                resolve();
+            }, reject);
+        });
+    }
+    /**
+     * Is the fullscreen mode available in this platform?
+     * @returns true if the fullscreen mode is available in this platform
+     */
+    isAvailable() {
+        return document.fullscreenEnabled ||
+            !!(document.webkitFullscreenEnabled);
+    }
+    /**
+     * Is the container currently being displayed in fullscreen mode?
+     * @returns true if the container is currently being displayed in fullscreen mode
+     */
+    isActivated() {
+        if (document.fullscreenElement !== undefined)
+            return document.fullscreenElement === this._container;
+        else if (document.webkitFullscreenElement !== undefined)
+            return document.webkitFullscreenElement === this._container;
+        else
+            return false;
+    }
+}
+/**
+ * Helper class to resize the viewport
+ */
+class ViewportResizer {
+    /**
+     * Constructor
+     * @param viewport the viewport to be resized
+     */
+    constructor(viewport) {
+        this._viewport = viewport;
+        this._timeout = null;
+        this._resize = this._onResize.bind(this);
+        this._triggerResize = this.triggerResize.bind(this);
+        this._resizeStrategy = new InlineResizeStrategy();
+        // initial setup
+        // (the size is yet unknown)
+        this._viewport.addEventListener('resize', this._resize);
+        this.triggerResize(0);
+    }
+    /**
+     * Initialize
+     */
+    init() {
+        // Configure the resize listener. We want the viewport to adjust itself
+        // if the phone/screen is resized or changes orientation
+        window.addEventListener('resize', this._triggerResize); // a delay is welcome
+        // handle changes of orientation
+        // (is this needed? we already listen to resize events)
+        if (screen.orientation !== undefined)
+            screen.orientation.addEventListener('change', this._triggerResize);
+        else
+            window.addEventListener('orientationchange', this._triggerResize); // deprecated
+        // trigger a resize to setup the sizes / the CSS
+        this.triggerResize(0);
+    }
+    /**
+     * Release
+     */
+    release() {
+        if (screen.orientation !== undefined)
+            screen.orientation.removeEventListener('change', this._triggerResize);
+        else
+            window.removeEventListener('orientationchange', this._triggerResize);
+        window.removeEventListener('resize', this._triggerResize);
+        this._viewport.removeEventListener('resize', this._resize);
+        this._resizeStrategy.clear(this._viewport);
+    }
+    /**
+     * Trigger a resize event after a delay
+     * @param delay in milliseconds
+     */
+    triggerResize(delay = 50) {
+        const event = new ViewportEvent('resize');
+        if (delay <= 0) {
+            this._viewport.dispatchEvent(event);
+            return;
+        }
+        if (this._timeout !== null)
+            clearTimeout(this._timeout);
+        this._timeout = setTimeout(() => {
+            this._timeout = null;
+            this._viewport.dispatchEvent(event);
+        }, delay);
+    }
+    /**
+     * Change the resize strategy
+     * @param strategy new strategy
+     */
+    setStrategy(strategy) {
+        this._resizeStrategy.clear(this._viewport);
+        this._resizeStrategy = strategy;
+        this.triggerResize(0);
+    }
+    /**
+     * Change the resize strategy
+     * @param strategyName name of the new strategy
+     */
+    setStrategyByName(strategyName) {
+        switch (strategyName) {
+            case 'best-fit':
+                this.setStrategy(new BestFitResizeStrategy());
+                break;
+            case 'stretch':
+                this.setStrategy(new StretchResizeStrategy());
+                break;
+            case 'inline':
+                this.setStrategy(new InlineResizeStrategy());
+                break;
+            default:
+                throw new IllegalArgumentError('Invalid viewport style: ' + strategyName);
+        }
+    }
+    /**
+     * Resize callback
+     */
+    _onResize() {
+        const viewport = this._viewport;
+        // Resize the drawing buffer of the foreground canvas, so that it
+        // matches the desired resolution, as well as the aspect ratio of the
+        // background canvas
+        const foregroundCanvas = viewport.canvas;
+        const virtualSize = viewport.virtualSize;
+        foregroundCanvas.width = virtualSize.width;
+        foregroundCanvas.height = virtualSize.height;
+        // Resize the drawing buffer of the background canvas
+        const backgroundCanvas = viewport._backgroundCanvas;
+        const realSize = viewport._realSize;
+        backgroundCanvas.width = realSize.width;
+        backgroundCanvas.height = realSize.height;
+        // Call strategy
+        this._resizeStrategy.resize(viewport);
+    }
+}
+/**
+ * Resize strategies
+ */
+class ViewportResizeStrategy {
+    /**
+     * Clear CSS rules
+     * @param viewport
+     */
+    clear(viewport) {
+        viewport.container.style.cssText = '';
+        viewport._subContainer.style.cssText = '';
+    }
+}
+/**
+ * Inline viewport: it follows the typical flow of a web page
+ */
+class InlineResizeStrategy extends ViewportResizeStrategy {
+    /**
+     * Resize the viewport
+     * @param viewport
+     */
+    resize(viewport) {
+        const container = viewport.container;
+        const subContainer = viewport._subContainer;
+        const virtualSize = viewport.virtualSize;
+        container.style.position = 'relative';
+        container.style.left = '0px';
+        container.style.top = '0px';
+        container.style.width = virtualSize.width + 'px';
+        container.style.height = virtualSize.height + 'px';
+        subContainer.style.position = 'absolute';
+        subContainer.style.left = '0px';
+        subContainer.style.top = '0px';
+        subContainer.style.width = '100%';
+        subContainer.style.height = '100%';
+    }
+}
+/**
+ * Immersive viewport: it occupies the entire page
+ */
+class ImmersiveResizeStrategy extends ViewportResizeStrategy {
+    /**
+     * Resize the viewport
+     * @param viewport
+     */
+    resize(viewport) {
+        const CONTAINER_ZINDEX = 1000000000;
+        const container = viewport.container;
+        container.style.position = 'fixed';
+        container.style.left = '0px';
+        container.style.top = '0px';
+        container.style.width = '100vw';
+        container.style.height = '100vh';
+        container.style.zIndex = String(CONTAINER_ZINDEX);
+    }
+}
+/**
+ * Immersive viewport with best-fit style: it occupies the entire page and
+ * preserves the aspect ratio of the media
+ */
+class BestFitResizeStrategy extends ImmersiveResizeStrategy {
+    /**
+     * Resize the viewport
+     * @param viewport
+     */
+    resize(viewport) {
+        const subContainer = viewport._subContainer;
+        const windowAspectRatio = window.innerWidth / window.innerHeight;
+        const viewportAspectRatio = viewport._realSize.width / viewport._realSize.height;
+        let width = 1, height = 1;
+        if (viewportAspectRatio <= windowAspectRatio) {
+            height = window.innerHeight;
+            width = Math.round(height * viewportAspectRatio);
+            width -= width % 2;
+        }
+        else {
+            width = window.innerWidth;
+            height = Math.round(width / viewportAspectRatio);
+            height -= height % 2;
+        }
+        subContainer.style.position = 'absolute';
+        subContainer.style.left = `calc(50% - ${width >>> 1}px)`;
+        subContainer.style.top = `calc(50% - ${height >>> 1}px)`;
+        subContainer.style.width = width + 'px';
+        subContainer.style.height = height + 'px';
+        super.resize(viewport);
+    }
+}
+/**
+ * Immersive viewport with stretch style: it occupies the entire page and
+ * fully stretches the media
+ */
+class StretchResizeStrategy extends ImmersiveResizeStrategy {
+    /**
+     * Resize the viewport
+     * @param viewport
+     */
+    resize(viewport) {
+        const subContainer = viewport._subContainer;
+        subContainer.style.position = 'absolute';
+        subContainer.style.left = '0px';
+        subContainer.style.top = '0px';
+        subContainer.style.width = window.innerWidth + 'px';
+        subContainer.style.height = window.innerHeight + 'px';
+        super.resize(viewport);
+    }
+}
+/**
+ * Viewport
+ */
+class Viewport extends ViewportEventTarget {
+    /**
+     * Constructor
+     * @param viewportSettings
+     */
+    constructor(viewportSettings) {
+        const settings = Object.assign({}, DEFAULT_VIEWPORT_SETTINGS, viewportSettings);
+        super();
+        const guessedAspectRatio = window.innerWidth / window.innerHeight;
+        const initialSize = Utils.resolution(settings.resolution, guessedAspectRatio);
+        this._mediaSize = () => initialSize;
+        this._resolution = settings.resolution;
+        this._style = settings.style;
+        this._containers = new ViewportContainers(settings.container);
+        this._hud = new HUD(this._subContainer, settings.hudContainer);
+        this._canvases = new ViewportCanvases(this._subContainer, initialSize, settings.canvas);
+        this._fullscreen = new ViewportFullscreenHelper(this.container);
+        this._resizer = new ViewportResizer(this);
+        this._resizer.setStrategyByName(this._style);
+    }
+    /**
+     * Viewport container
+     */
+    get container() {
+        return this._containers.container;
+    }
+    /**
+     * Viewport style
+     */
+    get style() {
+        return this._style;
+    }
+    /**
+     * Set viewport style
+     */
+    set style(value) {
+        // note: the viewport style is independent of the session mode!
+        if (value !== this._style) {
+            this._resizer.setStrategyByName(value);
+            this._style = value;
+        }
+    }
+    /**
+     * HUD
+     */
+    get hud() {
+        return this._hud;
+    }
+    /**
+     * Resolution of the virtual scene
+     */
+    get resolution() {
+        return this._resolution;
+    }
+    /**
+     * Size in pixels of the drawing buffer of the canvas
+     * on which the virtual scene will be drawn
+     */
+    get virtualSize() {
+        const size = this._realSize;
+        const aspectRatio = size.width / size.height;
+        return Utils.resolution(this._resolution, aspectRatio);
+    }
+    /**
+     * Is the viewport currently being displayed in fullscreen mode?
+     */
+    get fullscreen() {
+        return this._fullscreen.isActivated();
+    }
+    /**
+     * Is the fullscreen mode available in this platform?
+     */
+    get fullscreenAvailable() {
+        return this._fullscreen.isAvailable();
+    }
+    /**
+     * The canvas on which the virtual scene will be drawn
+     */
+    get canvas() {
+        return this._canvases.foregroundCanvas;
+    }
+    /**
+     * The canvas on which the physical scene will be drawn
+     * @internal
+     */
+    get _backgroundCanvas() {
+        return this._canvases.backgroundCanvas;
+    }
+    /**
+     * Size of the drawing buffer of the background canvas, in pixels
+     * @internal
+     */
+    get _realSize() {
+        return this._mediaSize();
+    }
+    /**
+     * Sub-container of the viewport container
+     * @internal
+     */
+    get _subContainer() {
+        return this._containers.subContainer;
+    }
+    /**
+     * Request fullscreen mode
+     * @returns promise
+     */
+    requestFullscreen() {
+        return this._fullscreen.request();
+    }
+    /**
+     * Exit fullscreen mode
+     * @returns promise
+     */
+    exitFullscreen() {
+        return this._fullscreen.exit();
+    }
+    /**
+     * Initialize the viewport (when the session starts)
+     * @internal
+     */
+    _init(getMediaSize) {
+        this._mediaSize = getMediaSize;
+        this._containers.init();
+        this._hud._init(HUD_ZINDEX);
+        this._canvases.init();
+        this._resizer.init();
+    }
+    /**
+     * Release the viewport (when the session ends)
+     * @internal
+     */
+    _release() {
+        this._resizer.release();
+        this._canvases.release();
+        this._hud._release();
+        this._containers.release();
+    }
+}
+
 ;// CONCATENATED MODULE: ./src/main.ts
 /*
- * MARTINS.js
+ * encantar.js
  * GPU-accelerated Augmented Reality for the web
  * Copyright (C) 2022-2024 Alexandre Martins <alemartf(at)gmail.com>
  *
@@ -26000,7 +26011,7 @@ class SourceFactory {
 /**
  * GPU-accelerated Augmented Reality for the web
  */
-class Martins {
+class AR {
     /**
      * Start a new session
      * @param options
@@ -26027,7 +26038,7 @@ class Martins {
      * @returns a new viewport with the specified settings
      */
     static Viewport(settings) {
-        return new BaseViewport(settings);
+        return new Viewport(settings);
     }
     /**
      * Global Settings
@@ -26042,7 +26053,7 @@ class Martins {
         if (false)
             {}
         else
-            return "0.2.1-wip";
+            return "0.3.0";
     }
     /**
      * Speedy Vision
@@ -26059,13 +26070,13 @@ class Martins {
     }
 }
 // Freeze the namespace
-Object.freeze(Martins);
+Object.freeze(AR);
 // Add Speedy Vision to global scope
 ((window) => window.Speedy = window.Speedy || (speedy_vision_default()))(window);
 // Display a notice
-Utils.log(`MARTINS.js version ${Martins.version}. ` +
+Utils.log(`encantAR.js version ${AR.version}. ` +
     `GPU-accelerated Augmented Reality for the web by Alexandre Martins. ` +
-    "https://github.com/alemart/martins-js");
+    "https://github.com/alemart/encantar-js");
 
 })();
 
