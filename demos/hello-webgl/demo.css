@@ -1,5 +1,11 @@
 body {
     background-color: black;
+    background-image: url("../assets/poster.svg"), linear-gradient(black, 20%, #46346a);
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
 }
 
 #scan {

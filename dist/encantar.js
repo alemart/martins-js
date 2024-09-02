@@ -5,7 +5,7 @@
  * https://github.com/alemart/encantar-js
  *
  * @license LGPL-3.0-or-later
- * Date: 2024-08-15T23:42:41.661Z
+ * Date: 2024-09-02T19:15:04.498Z
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -20031,7 +20031,7 @@ class StatsPanel {
         title.style.fontWeight = 'bold';
         title.style.padding = '2px';
         title.innerHTML = '&#x2728;';
-        title.innerText += 'encantAR.js ' + AR.version;
+        title.innerText += 'encantar.js ' + AR.version;
         return title;
     }
     /**
@@ -25432,8 +25432,8 @@ class ViewportContainers {
      * Release
      */
     release() {
-        this._container.style.backgroundColor = 'initial';
-        this._container.style.touchAction = 'auto';
+        this._container.style.removeProperty('background-color');
+        this._container.style.removeProperty('touch-action');
     }
 }
 /**
@@ -25454,6 +25454,8 @@ class ViewportCanvases {
         this._backgroundCanvas = this._styleCanvas(this._createCanvas(initialSize), BACKGROUND_ZINDEX);
         parent.appendChild(this._backgroundCanvas);
         parent.appendChild(this._foregroundCanvas);
+        this._backgroundCanvas.hidden = true;
+        this._foregroundCanvas.hidden = true;
     }
     /**
      * The background canvas
@@ -25471,6 +25473,8 @@ class ViewportCanvases {
      * Initialize
      */
     init() {
+        this._backgroundCanvas.hidden = false;
+        this._foregroundCanvas.hidden = false;
     }
     /**
      * Release

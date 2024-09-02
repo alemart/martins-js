@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Open source WebAR engine. Runs everywhere. Easy to get started.">
+        <meta name="description" content="Enchant your users with WebAR experiences that run everywhere!">
       
       
         <meta name="author" content="Alexandre Martins">
@@ -57,9 +57,8 @@
     
     
 <meta property="og:title" content="Create the augmented scene - encantAR.js: GPU-accelerated Augmented Reality for the web">
-<meta property="og:description" content="Open source WebAR engine. Runs everywhere. Easy to get started.">
+<meta property="og:description" content="Enchant your users with WebAR experiences that run everywhere!">
 <meta property="og:url" content="https://alemart.github.io/encantar-js/">
-<meta property="og:image" content="https://alemart.github.io/encantar-js//img/poster.png">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="en_US">
 <meta property="robots" content="index, follow">
@@ -515,8 +514,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#write-the-glue-code" class="md-nav__link">
-    Write the glue code
+  <a href="#use-a-plugin" class="md-nav__link">
+    Use a plugin
   </a>
   
 </li>
@@ -1546,8 +1545,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#write-the-glue-code" class="md-nav__link">
-    Write the glue code
+  <a href="#use-a-plugin" class="md-nav__link">
+    Use a plugin
   </a>
   
 </li>
@@ -1609,13 +1608,13 @@
 <p>Now that the image is being tracked, the next step is to render a virtual scene on top of it. You need a 3D rendering technology to do that.</p>
 <h2 id="pick-a-3d-rendering-technology">Pick a 3D rendering technology</h2>
 <p>encantAR.js is not a 3D rendering technology. It is an Augmented Reality technology that provides the data you need in order to augment your physical scenes. There are free and open-source 3D rendering technologies for the web that you can find online and use with encantAR.js. Popular solutions include: A-Frame, Babylon.js and Three.js. You can also use other solutions. encantAR.js lets you pick any 3D rendering technology.</p>
-<p>Once you pick a 3D rendering technology, you need to integrate it with encantAR.js. There is a code that is responsible for that integration. I call it a <em>glue code</em>. Among other things, a glue code transports the tracking results from encantAR.js to the 3D rendering technology of your choice - it really is a "glue" connecting them.</p>
-<h2 id="write-the-glue-code">Write the glue code</h2>
-<p>Writing a glue code is a task of moderate complexity. It requires dealing with matrices, with performance issues, and with some idiosyncrasies of the 3D rendering technologies in order to make sure it all works as intended. It is advisable to have specialized knowledge of computer graphics programming in order to write a glue code that works correctly.</p>
-<p>I provide easy-to-use glue codes that work with different 3D rendering technologies in my demos, so that you don't need to deal with the complexity. Those glue codes are JavaScript (.js) files. You just need to add a glue code to your web page (e.g., via a <code>&lt;script&gt;</code> tag) and then the integration will be done for you. It's really that simple!</p>
-<p><a class="md-button _blank" href="../../demos/">Find the glue codes in my demos</a></p>
+<p>Once you pick a 3D rendering technology, you need to integrate it with encantAR.js. There is a code that is responsible for that integration. I call it a <em>plugin</em>. Among other things, a plugin transports the tracking results from encantAR.js to the 3D rendering technology of your choice.</p>
+<h2 id="use-a-plugin">Use a plugin</h2>
+<p>Writing a plugin is a task of moderate complexity. It requires dealing with matrices, with performance issues, and with some idiosyncrasies of the 3D rendering technologies in order to make sure it all works as intended. It is advisable to have specialized knowledge of computer graphics programming in order to write a plugin that works correctly.</p>
+<p>I provide easy-to-use plugins that work with different 3D rendering technologies in my demos, so that you don't need to deal with the complexity. Those plugins are JavaScript (.js) files. You just need to add a plugin to your web page (e.g., via a <code>&lt;script&gt;</code> tag) and then the integration will be done for you. It's really that simple!</p>
+<p><a class="md-button _blank" href="../../demos/">Find the plugins in my demos</a></p>
 <h2 id="create-the-virtual-scene">Create the virtual scene</h2>
-<p>Once you plug in the glue code, you'll be using the 3D rendering technology of your choice to create the virtual scene. The physical scene will be automatically augmented with the virtual scene, thus creating the augmented scene.</p>
+<p>You will create the virtual scene using the 3D rendering technology of your choice. As soon as you combine it with a plugin, the physical scene will be automatically augmented with the virtual scene, thus creating the augmented scene.</p>
 <figure>
 <video autoplay="autoplay" controls="controls" loop="loop" muted="muted" oncanplay="this.muted=true;this.play()" playsinline="playsinline" poster="../../img/demo-cool2.webp" style="width:600px">
     <source src="../../img/demo-cool2.webm" type="video/webm" />
@@ -1636,11 +1635,11 @@
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>        <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">&quot;utf-8&quot;</span><span class="p">&gt;</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>        <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">name</span><span class="o">=</span><span class="s">&quot;viewport&quot;</span> <span class="na">content</span><span class="o">=</span><span class="s">&quot;width=device-width,initial-scale=1&quot;</span><span class="p">&gt;</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>        <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>encantAR.js WebAR demo<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="hll">        <span class="cm">&lt;!-- include A-Frame --&gt;</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="hll">        <span class="cm">&lt;!-- include aframe --&gt;</span>
 </span><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="hll">        <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;aframe-vX.Y.Z.min.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
 </span><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;encantar.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>        <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;ar-demo.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="hll">        <span class="cm">&lt;!-- this is my glue code for A-Frame --&gt;</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="hll">        <span class="cm">&lt;!-- include the aframe plugin for encantar.js --&gt;</span>
 </span><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="hll">        <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;aframe-with-encantar.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
 </span><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>        <span class="p">&lt;</span><span class="nt">style</span><span class="p">&gt;</span><span class="nt">body</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">background-color</span><span class="p">:</span><span class="w"> </span><span class="mh">#3d5afe</span><span class="p">;</span><span class="w"> </span><span class="p">}&lt;/</span><span class="nt">style</span><span class="p">&gt;</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
@@ -1670,7 +1669,7 @@
 <a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>    <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
 <a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
 </code></pre></div>
-<p><code>&lt;ar-root&gt;</code> is not part of A-Frame, but it becomes available as soon as you plug in my glue code.</p>
+<p><code>&lt;ar-root&gt;</code> is not part of A-Frame, but it becomes available as soon as you use my plugin.</p>
 <p>A-Frame lets you create animated scenes with special effects simply by declaring things, like in the above example. In many cases, writing new JavaScript code is not needed. A-Frame also includes a visual inspector that makes things really easy for non-coders.</p>
 <h3 id="babylonjs">Babylon.js</h3>
 <p><a class="_blank" href="https://www.babylonjs.com">Babylon.js</a> is a powerful open-source game and 3D rendering engine for the web. It includes pretty much all features you commonly find in 3D rendering engines (scene graphs, lights, materials, meshes, etc.), plus systems that are specific to game engines (animation engine, audio engine, collision system, physics system, support for sprites, etc.), plus all kinds of sophisticated features for various applications.</p>
