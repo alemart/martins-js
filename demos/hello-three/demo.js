@@ -1,103 +1,100 @@
-window.addEventListener('load', () => {
+/**
+ * Augmented Reality demo with three.js and encantar.js
+ */
 
-    const my = { };
+(function() {
 
-    async function initialize(ar)
-    {
-        // add lights
-        const ambientLight = new THREE.AmbientLight(0xb7b7b7);
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.4);
-        directionalLight.position.set(0, 0, -1);
-        directionalLight.target.position.set(0, 0, 0);
-        ar.scene.add(directionalLight);
-        ar.scene.add(ambientLight);
-
-        // create a group of objects as a child of ar.root
-        const group = createGroup('in-front');
-        //const group = createGroup('on-top'); // try this option!
-        ar.root.add(group);
-
-        // create cubes
-        const cubeA = createCube(-0.75, 0, 0xffff00);
-        const cubeB = createCube(0.75, 0, 0x00ff00);
-        group.add(cubeA, cubeB);
-
-        // create the ground
-        const ground = createGround(0x3d5afe);
-        group.add(ground);
-
-        // load a 3D model
-        const modelURL = '../assets/my-3d-model.glb';
-        const model = await loadModel(modelURL);
-        group.add(model);
-
-        // export objects
-        my.cubes = [ cubeA, cubeB ];
-        my.group = group;
-        my.model = model;
-        my.ground = ground;
-    }
-
-    function animate(ar)
-    {
-        const ROTATION_CYCLES_PER_SECOND = 1.0;
-        const TWO_PI = 2.0 * Math.PI;
-        const delta = ar.session.time.delta;
-
-        // rotate the cubes
-        for(const cube of my.cubes)
-            cube.rotateY(TWO_PI * ROTATION_CYCLES_PER_SECOND * delta);
-    }
-
-    function createGroup(mode = 'in-front')
-    {
-        const group = new THREE.Group();
-
-        if(mode == 'in-front') {
-            group.rotation.set(-Math.PI/2, 0, 0);
-            group.position.set(0, -0.5, 0.5);
-        }
-        else if(mode == 'on-top') {
-            group.rotation.set(0, 0, 0);
-            group.position.set(0, 0, 0);
-        }
-
-        return group;
-    }
-
-    function createCube(x, y, color, length = 0.25)
-    {
-        const geometry = new THREE.BoxGeometry(length, length, length);
-        const material = new THREE.MeshPhongMaterial({ color });
-        const cube = new THREE.Mesh(geometry, material);
-
-        cube.position.set(x, y, 1.25);
-
-        return cube;
-    }
-
-    function createGround(color)
-    {
-        const geometry = new THREE.RingGeometry(0.001, 1, 8);
-        const material = new THREE.MeshPhongMaterial({ color: color, side: THREE.DoubleSide });
-        const ground = new THREE.Mesh(geometry, material);
-
-        material.transparent = true;
-        material.opacity = 0.75;
-
-        return ground;
-    }
-
-    async function loadModel(filepath)
+/**
+ * Utilities for the Demo scene
+ */
+class DemoUtils
+{
+    async loadGLTF(filepath, yAxisIsUp = true)
     {
         const loader = new THREE.GLTFLoader();
         const gltf = await loader.loadAsync(filepath);
-        const model = gltf.scene;
 
-        return model;
+        // glTF defines +y as up. We expect +z to be up.
+        if(yAxisIsUp)
+            gltf.scene.rotateX(Math.PI / 2);
+
+        return gltf;
     }
 
-    async function startARSession()
+    switchToFrontView(root)
+    {
+        // top view is the default
+        root.rotateX(-Math.PI / 2);
+    }
+
+    createAnimationAction(gltf, name = null)
+    {
+        const mixer = new THREE.AnimationMixer(gltf.scene);
+        const clips = gltf.animations;
+
+        if(clips.length == 0)
+            throw new Error('No animation clips');
+
+        const clip = (name !== null) ? THREE.AnimationClip.findByName(clips, name) : clips[0];
+        const action = mixer.clipAction(clip);
+
+        return action;
+    }
+
+    createImagePlane(imagepath)
+    {
+        const texture = new THREE.TextureLoader().load(imagepath);
+        const geometry = new THREE.PlaneGeometry(1, 1);
+        const material = new THREE.MeshBasicMaterial({
+            map: texture,
+            side: THREE.DoubleSide,
+        });
+        const mesh = new THREE.Mesh(geometry, material);
+
+        return mesh;
+    }
+
+    referenceImage(ar)
+    {
+        if(ar.frame === null)
+            return null;
+
+        for(const result of ar.frame.results) {
+            if(result.tracker.type == 'image-tracker') {
+                if(result.trackables.length > 0) {
+                    const trackable = result.trackables[0];
+                    return trackable.referenceImage;
+                }
+            }
+        }
+
+        return null;
+    }
+}
+
+
+
+/**
+ * Demo scene
+ */
+class DemoScene extends ARScene
+{
+    /**
+     * Constructor
+     */
+    constructor()
+    {
+        super();
+
+        this._utils = new DemoUtils();
+        this._objects = { };
+    }
+
+    /**
+     * Start the AR session
+     * @returns {Promise<Session>}
+     */
+    async startSession()
     {
         if(!AR.isSupported()) {
             throw new Error(
@@ -151,7 +148,95 @@ window.addEventListener('load', () => {
         return session;
     }
 
-    // enchant!
-    encantar(startARSession, animate, initialize);
+    /**
+     * Initialize the augmented scene
+     * @param {ARPluginSystem} ar
+     * @returns {Promise<void>}
+     */
+    async init(ar)
+    {
+        // Change the point of view. All virtual objects are descendants of
+        // ar.root, a node that is automatically aligned to the physical scene.
+        // Adjusting ar.root will adjust all virtual objects.
+        this._utils.switchToFrontView(ar.root);
+        ar.root.position.set(0, -0.5, 0);
+        ar.root.scale.set(0.7, 0.7, 0.7);
+
+        // add lights
+        const ambientLight = new THREE.AmbientLight(0xffffff);
+        ar.scene.add(ambientLight);
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff);
+        directionalLight.position.set(0, 0, 3);
+        ar.root.add(directionalLight);
+
+        // create the magic circle
+        const magicCircle = this._utils.createImagePlane('../assets/magic-circle.png');
+        magicCircle.material.transparent = true;
+        magicCircle.material.opacity = 0.85;
+        magicCircle.material.color = new THREE.Color(0xbeefff);
+        magicCircle.scale.set(6, 6, 1);
+        ar.root.add(magicCircle);
+
+        // load the mage
+        const gltf = await this._utils.loadGLTF('../assets/mage.glb');
+        const mage = gltf.scene;
+        ar.root.add(mage);
+
+        // prepare the animation of the mage
+        const animationAction = this._utils.createAnimationAction(gltf, 'Idle');
+        animationAction.loop = THREE.LoopRepeat;
+        animationAction.play();
+
+        // save objects
+        this._objects.mage = mage;
+        this._objects.magicCircle = magicCircle;
+        this._objects.animationAction = animationAction;
+    }
+
+    /**
+     * Update / animate the augmented scene
+     * @param {ARPluginSystem} ar
+     * @returns {void}
+     */
+    update(ar)
+    {
+        const TWO_PI = 2.0 * Math.PI;
+        const ROTATIONS_PER_SECOND = 0.25;
+        const delta = ar.session.time.delta; // given in seconds
+
+        // animate the mage
+        const animationAction = this._objects.animationAction;
+        const mixer = animationAction.getMixer();
+        mixer.update(delta);
+
+        // animate the magic circle
+        const magicCircle = this._objects.magicCircle;
+        magicCircle.rotateZ(TWO_PI * ROTATIONS_PER_SECOND * delta);
+    }
+
+    /**
+     * Release the augmented scene
+     * @param {ARPluginSystem} ar
+     * @returns {void}
+     */
+    release(ar)
+    {
+        // nothing to do
+    }
+}
+
+
+
+/**
+ * Enchant the Demo scene
+ */
+window.addEventListener('load', () => {
+
+    const scene = new DemoScene();
+
+    encantar(scene);
 
 });
+
+})();
