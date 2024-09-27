@@ -1,8 +1,15 @@
 /**
- * Augmented Reality demo with three.js and encantar.js
+ * Augmented Reality demo using the three.js plugin for encantar.js
+ * https://alemart.github.io/encantar-js/
  */
 
 (function() {
+
+// Validate
+if(typeof encantar === 'undefined')
+    throw new Error(`Can't find the three.js plugin for encantar.js`);
+
+
 
 /**
  * Utilities for the Demo scene
@@ -229,14 +236,15 @@ class DemoScene extends ARScene
 
 
 /**
- * Enchant the Demo scene
+ * Enchant the scene
+ * @returns {void}
  */
-window.addEventListener('load', () => {
-
+function main()
+{
     const scene = new DemoScene();
-
     encantar(scene);
+}
 
-});
+document.addEventListener('DOMContentLoaded', main);
 
 })();
