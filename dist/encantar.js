@@ -5,7 +5,7 @@
  * https://github.com/alemart/encantar-js
  *
  * @license LGPL-3.0-or-later
- * Date: 2024-09-02T19:15:04.498Z
+ * Date: 2024-10-05T04:17:49.391Z
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -19651,6 +19651,25 @@ class Utils {
         return Array.from({ length: n }, (_, i) => i);
     }
     /**
+     * Wait a few milliseconds
+     * @param milliseconds how long should we wait?
+     * @returns a promise that is resolved soon after the specified time
+     */
+    static wait(milliseconds) {
+        return new (speedy_vision_default()).Promise(resolve => {
+            setTimeout(resolve, milliseconds);
+        });
+    }
+    /**
+     * Run SpeedyPromises sequentially
+     * @param promises an array of SpeedyPromises
+     * @returns a promise that is resolved as soon as all input promises are
+     * resolved, or that is rejected as soon as an input promise is rejected
+     */
+    static runInSequence(promises) {
+        return promises.reduce((prev, curr) => prev.then(() => curr), speedy_vision_default().Promise.resolve());
+    }
+    /**
      * Convert a resolution type to a resolution measured in pixels
      * @param resolution resolution type
      * @param aspectRatio width / height ratio
@@ -20109,24 +20128,6 @@ class StatsPanel {
  * A Frame holds information used to render a single animation frame of a Session
  */
 /**
- * Iterable frame results (helper class)
- */
-class IterableTrackerResults {
-    constructor(_results) {
-        this._results = _results;
-        this._index = 0;
-    }
-    next() {
-        const i = this._index++;
-        return i < this._results.length ?
-            { done: false, value: this._results[i] } :
-            { done: true, value: undefined };
-    }
-    [Symbol.iterator]() {
-        return this;
-    }
-}
-/**
  * A Frame holds information used to render a single animation frame of a Session
  */
 class Frame {
@@ -20137,7 +20138,7 @@ class Frame {
      */
     constructor(session, results) {
         this._session = session;
-        this._results = new IterableTrackerResults(results);
+        this._results = results;
     }
     /**
      * The session of which this frame holds data
@@ -20149,7 +20150,8 @@ class Frame {
      * The results of all trackers in this frame
      */
     get results() {
-        return this._results;
+        // we want to be able to iterate over the results of a frame multiple times
+        return this._results[Symbol.iterator]();
     }
 }
 
@@ -20749,11 +20751,8 @@ class Session extends AREventTarget {
         Utils.log('Shutting down the session...');
         this._active = false; // set before wait()
         // wait a few ms, so that the GPU is no longer sending any data
-        const wait = (ms) => new (speedy_vision_default()).Promise(resolve => {
-            setTimeout(resolve, ms);
-        });
-        // release resources
-        return wait(100).then(() => speedy_vision_default().Promise.all(
+        // then, release resources
+        return Utils.wait(100).then(() => speedy_vision_default().Promise.all(
         // release trackers
         this._trackers.map(tracker => tracker._release()))).then(() => speedy_vision_default().Promise.all(
         // release input sources
@@ -20781,10 +20780,13 @@ class Session extends AREventTarget {
      */
     requestAnimationFrame(callback) {
         const handle = Symbol('raf-handle');
-        if (this._active)
+        if (this._active) {
             this._rafQueue.push([handle, callback]);
-        else
-            throw new IllegalOperationError(`Can't requestAnimationFrame(): session ended.`);
+        }
+        else {
+            // if the session is inactive, we simply ignore this call
+            // this is friendly behavior, since RAF is used in animation loops
+        }
         return handle;
     }
     /**
@@ -20818,10 +20820,10 @@ class Session extends AREventTarget {
         return this._mode;
     }
     /**
-     * Rendering viewport
+     * Whether or not the session has been ended
      */
-    get viewport() {
-        return this._viewport;
+    get ended() {
+        return !this._active;
     }
     /**
      * Time utilities
@@ -20834,6 +20836,24 @@ class Session extends AREventTarget {
      */
     get gizmos() {
         return this._gizmos;
+    }
+    /**
+     * Rendering viewport
+     */
+    get viewport() {
+        return this._viewport;
+    }
+    /**
+     * Attached trackers
+     */
+    get trackers() {
+        return this._trackers[Symbol.iterator]();
+    }
+    /**
+     * Sources of data
+     */
+    get sources() {
+        return this._sources[Symbol.iterator]();
     }
     /**
      * Attach a tracker to the session
@@ -21093,6 +21113,7 @@ Settings._powerPreference = 'default';
  */
 
 
+
 /** Default capacity of a Reference Image Database */
 const DEFAULT_CAPACITY = 100; // this number should exceed normal usage
 // XXX this number may be changed (is 100 too conservative?)
@@ -21111,6 +21132,7 @@ class ReferenceImageDatabase {
         this._capacity = DEFAULT_CAPACITY;
         this._database = [];
         this._locked = false;
+        this._busy = false;
     }
     /**
      * The number of reference images stored in this database
@@ -21156,13 +21178,16 @@ class ReferenceImageDatabase {
         // handle multiple images as input
         if (referenceImages.length > 1) {
             const promises = referenceImages.map(image => this.add([image]));
-            return speedy_vision_default().Promise.all(promises).then(() => void (0));
+            return Utils.runInSequence(promises);
         }
         // handle a single image as input
         const referenceImage = referenceImages[0];
         // locked database?
         if (this._locked)
             throw new IllegalOperationError(`Can't add reference image to the database: it's locked`);
+        // busy loading another image?
+        if (this._busy)
+            return Utils.wait(4).then(() => this.add(referenceImages)); // try again later
         // reached full capacity?
         if (this.count >= this.capacity)
             throw new IllegalOperationError(`Can't add reference image to the database: the capacity of ${this.capacity} images has been exceeded.`);
@@ -21170,7 +21195,9 @@ class ReferenceImageDatabase {
         if (this._database.find(entry => entry.referenceImage.name === referenceImage.name) !== undefined)
             throw new IllegalArgumentError(`Can't add reference image to the database: found duplicated name "${referenceImage.name}"`);
         // load the media and add the reference image to the database
+        this._busy = true;
         return speedy_vision_default().load(referenceImage.image).then(media => {
+            this._busy = false;
             this._database.push({
                 referenceImage: Object.freeze(Object.assign(Object.assign({}, referenceImage), { name: referenceImage.name || generateUniqueName() })),
                 media: media
@@ -21182,6 +21209,8 @@ class ReferenceImageDatabase {
      * @internal
      */
     _lock() {
+        if (this._busy)
+            throw new IllegalOperationError(`Can't lock the reference image database: we're busy loading an image`);
         this._locked = true;
     }
     /**
@@ -23729,6 +23758,7 @@ class PerspectiveView {
         if (this._near >= this._far)
             throw new IllegalArgumentError(`View expects near < far (found near = ${this._near} and far = ${this._far})`);
         this._aspect = screenSize.width / screenSize.height;
+        this._tanOfHalfFovx = intrinsics[U0] / intrinsics[FX];
         this._tanOfHalfFovy = intrinsics[V0] / intrinsics[FY];
         this._projectionMatrix = PerspectiveView._computeProjectionMatrix(intrinsics, this._near, this._far);
     }
@@ -23743,6 +23773,12 @@ class PerspectiveView {
      */
     get aspect() {
         return this._aspect;
+    }
+    /**
+     * Horizontal field-of-view of the frustum, measured in radians
+     */
+    get fovx() {
+        return 2 * Math.atan(this._tanOfHalfFovx);
     }
     /**
      * Vertical field-of-view of the frustum, measured in radians
@@ -25322,6 +25358,7 @@ class HUD {
      * @internal
      */
     _release() {
+        this.visible = false;
         if (this._isOwnContainer) {
             this._isOwnContainer = false;
             this._container.remove();
@@ -25480,6 +25517,8 @@ class ViewportCanvases {
      * Release
      */
     release() {
+        this._backgroundCanvas.hidden = true;
+        this._foregroundCanvas.hidden = true;
         this._backgroundCanvas.style.cssText = '';
         this._foregroundCanvas.style.cssText = this._originalCSSTextOfForegroundCanvas;
     }
@@ -25759,6 +25798,7 @@ class InlineResizeStrategy extends ViewportResizeStrategy {
         const container = viewport.container;
         const subContainer = viewport._subContainer;
         const virtualSize = viewport.virtualSize;
+        container.style.display = 'inline-block'; // fixes a potential issue of the viewport not showing up
         container.style.position = 'relative';
         container.style.left = '0px';
         container.style.top = '0px';
