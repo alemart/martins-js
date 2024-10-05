@@ -784,8 +784,22 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#ended" class="md-nav__link">
+    ended
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#time" class="md-nav__link">
     time
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gizmos" class="md-nav__link">
+    gizmos
   </a>
   
 </li>
@@ -798,8 +812,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#gizmos" class="md-nav__link">
-    gizmos
+  <a href="#trackers" class="md-nav__link">
+    trackers
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    sources
   </a>
   
 </li>
@@ -1640,8 +1661,22 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#ended" class="md-nav__link">
+    ended
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#time" class="md-nav__link">
     time
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gizmos" class="md-nav__link">
+    gizmos
   </a>
   
 </li>
@@ -1654,8 +1689,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#gizmos" class="md-nav__link">
-    gizmos
+  <a href="#trackers" class="md-nav__link">
+    trackers
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    sources
   </a>
   
 </li>
@@ -1762,22 +1804,35 @@
 <h3 id="mode">mode</h3>
 <p><code>session.mode: string, read-only</code></p>
 <p>Session mode: either <code>"immersive"</code> or <code>"inline"</code>.</p>
+<h3 id="ended">ended</h3>
+<p><code>session.ended: boolean, read-only</code></p>
+<p>Whether or not the session has been ended. See also: <a href="#end">end</a>.</p>
+<p><em>Since:</em> 0.3.0</p>
 <h3 id="time">time</h3>
 <p><code>session.time: Time, read-only</code></p>
 <p>A reference to the <a href="../time/">Time</a> utilities of this session.</p>
-<h3 id="viewport">viewport</h3>
-<p><code>session.viewport: Viewport, read-only</code></p>
-<p>A reference to the <a href="../viewport/">Viewport</a> linked to this session.</p>
 <h3 id="gizmos">gizmos</h3>
 <p><code>session.gizmos: Gizmos, read-only</code></p>
 <p>A reference to the <a href="../gizmos/">Gizmos</a> object.</p>
+<h3 id="viewport">viewport</h3>
+<p><code>session.viewport: Viewport, read-only</code></p>
+<p>A reference to the <a href="../viewport/">Viewport</a> linked to this session.</p>
+<h3 id="trackers">trackers</h3>
+<p><code>session.trackers: Iterable&lt;Tracker&gt;, read-only</code></p>
+<p>The <a href="../tracker/">trackers</a> that are attached to the session.</p>
+<p><em>Since:</em> 0.3.0</p>
+<h3 id="sources">sources</h3>
+<p><code>session.sources: Iterable&lt;Source&gt;, read-only</code></p>
+<p>The <a href="../source/">sources of data</a> that are linked to the session.</p>
+<p><em>Since:</em> 0.3.0</p>
 <h2 id="methods">Methods</h2>
 <h3 id="requestanimationframe">requestAnimationFrame</h3>
 <p><code>session.requestAnimationFrame(callback: function): SessionRequestAnimationFrameHandle</code></p>
 <p>Schedules a call to the <code>callback</code> function, which is intended to update and render the virtual scene. Your <code>callback</code> function must itself call <code>session.requestAnimationFrame()</code> again in order to continue to update and render the virtual scene.</p>
 <div class="admonition info">
-<p class="admonition-title">Note</p>
+<p class="admonition-title">Notes</p>
 <p><code>session.requestAnimationFrame()</code> is analogous to <code>window.requestAnimationFrame()</code>, but they are not the same! The former is a call to the WebAR engine, whereas the latter is a standard call to the web browser.</p>
+<p>This call will be ignored and an invalid handle will be returned if the session has been <a href="#ended">ended</a> (<em>since 0.3.0</em>). Previously, it would raise an exception.</p>
 </div>
 <p><strong>Arguments</strong></p>
 <ul>
@@ -1790,23 +1845,28 @@
 <p><strong>Returns</strong></p>
 <p>A handle.</p>
 <p><strong>Example</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kd">function</span> <span class="nx">animate</span><span class="p">(</span><span class="nx">time</span><span class="p">,</span> <span class="nx">frame</span><span class="p">)</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="p">{</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="c1">// update and render the virtual scene</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="c1">// ...</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="c1">// repeat the call</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="nx">session</span><span class="p">.</span><span class="nx">requestAnimationFrame</span><span class="p">(</span><span class="nx">animate</span><span class="p">);</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">//</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1">// This is the animation loop:</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1">//</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="kd">function</span> <span class="nx">animate</span><span class="p">(</span><span class="nx">time</span><span class="p">,</span> <span class="nx">frame</span><span class="p">)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">{</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="c1">// update and render the virtual scene</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="c1">// ...</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nx">session</span><span class="p">.</span><span class="nx">requestAnimationFrame</span><span class="p">(</span><span class="nx">animate</span><span class="p">);</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="c1">// repeat</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="nx">session</span><span class="p">.</span><span class="nx">requestAnimationFrame</span><span class="p">(</span><span class="nx">animate</span><span class="p">);</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="p">}</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1">// start the animation loop</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="nx">session</span><span class="p">.</span><span class="nx">requestAnimationFrame</span><span class="p">(</span><span class="nx">animate</span><span class="p">);</span>
 </code></pre></div>
 <h3 id="cancelanimationframe">cancelAnimationFrame</h3>
 <p><code>session.cancelAnimationFrame(handle: SessionRequestAnimationFrameHandle): void</code></p>
 <p>Cancels an animation frame request.</p>
 <p><strong>Arguments</strong></p>
 <ul>
-<li><code>handle: SessionRequestAnimationFrameHandle</code>. A handle returned by <code>session.requestAnimationFrame()</code>.</li>
+<li><code>handle: SessionRequestAnimationFrameHandle</code>. A handle returned by <code>session.requestAnimationFrame()</code>. If the handle is invalid, this method does nothing.</li>
 </ul>
 <h3 id="end">end</h3>
 <p><code>session.end(): SpeedyPromise&lt;void&gt;</code></p>

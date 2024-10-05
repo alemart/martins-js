@@ -7,56 +7,138 @@
         <link href="demo.css" rel="stylesheet">
         <script src="../../dist/encantar.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/aframe@1.4.2/dist/aframe-v1.4.2.min.js"></script>
-        <script src="../assets/aframe-particle-system-component.min.js"></script>
-        <script src="demo.js"></script>
         <script src="../../plugins/aframe-with-encantar.js"></script>
+        <script src="../../plugins/extras/aframe-scan-gimmick-for-encantar.js"></script>
+        <script src="../../plugins/extras/aframe-gltf-anim.js"></script>
     </head>
     <body>
-        <div id="ar-viewport">
-            <div id="ar-hud" hidden>
-                <img id="scan" src="../assets/scan.png">
-                <a id="about" href="NOTICE.html"></a>
-            </div>
-        </div>
-        <img id="my-reference-image" src="../assets/my-reference-image.webp" hidden>
-        <video id="my-video" hidden muted loop playsinline autoplay>
-            <source src="../assets/my-video.webm" type="video/webm" />
-            <source src="../assets/my-video.mp4" type="video/mp4" />
-        </video>
 
-        <!-- This is a scene -->
-        <a-scene ar-scene>
-            <a-camera ar-camera></a-camera>
+        <!-- The AR scene -->
+        <a-scene ar-session="stats: true; gizmos: true">
 
-            <!-- Whatever you add to <ar-root> will appear in AR -->
-            <ar-root>
+            <!--
+            +============================+
+            | Let's set up an AR session |
+            +============================+
+            -->
 
-                <!-- Ground plane -->
-                <a-plane position="0 -0.5 -0.5" rotation="-90 0 0" width="2" height="1" color="indigo">
+            <!-- The inputs that will feed the AR engine -->
+            <ar-sources>
+
+                <!-- Use a webcam -->
+                <!--
+                <ar-camera-source></ar-camera-source>
+                -->
+
+                <!-- Use a video element (see <a-assets>) -->
+                <ar-video-source video="#my-video"></ar-video-source>
+
+            </ar-sources>
+
+            <!-- The trackers we'll be using in AR -->
+            <ar-trackers>
+
+                <!-- We'll track images -->
+                <ar-image-tracker>
+
+                    <!-- List the images that you intend to track
+                         Make sure to follow the guidelines for images (see the docs) -->
+                    <ar-reference-image name="mage" src="../assets/mage.webp"></ar-reference-image>
+                    <ar-reference-image name="cat" src="../assets/cat.webp"></ar-reference-image>
+
+                </ar-image-tracker>
+
+            </ar-trackers>
+
+            <!-- The AR viewport -->
+            <ar-viewport>
+
+                <!-- A 2D overlay displayed in front of the AR scene -->
+                <ar-hud>
+
+                    <!-- The about button -->
+                    <a id="about" href="NOTICE.html"></a>
+
+                    <!-- The scan gimmick -->
+                    <a-entity ar-scan-gimmick="opacity: 0.75"></a-entity>
+
+                </ar-hud>
+
+            </ar-viewport>
+
+
+
+
+            <!--
+            +=================================================+
+            | Now let's create the virtual elements           |
+            | Whatever you add to <ar-root> will appear in AR |
+            +=================================================+
+            -->
+
+            <!-- A 3D camera adapted for AR -->
+            <ar-camera></ar-camera>
+
+            <!-- The mage-->
+            <ar-root reference-image="mage">
+
+                <!-- Switch from top view to front view -->
+                <a-entity rotation="-90 0 0" position="0 -0.5 0">
+
+                    <!-- Light -->
+                    <a-light type="ambient" intensity="1.5"></a-light>
 
                     <!-- 3D model -->
-                    <a-entity gltf-model="#my-3d-model"></a-entity>
-
-                    <!-- Particles -->
-                    <a-entity rotation="90 0 0">
-                        <a-entity position="0.75 0 0" particle-system="texture: ../assets/particle.png; color: #03f; opacity: 0.33; size: 20; maxAge: 0.64; velocityValue: 0 6.5 0; velocitySpread: 0 0 0; accelerationSpread: 2 0 2; particleCount: 2000"></a-entity>
-                        <a-entity position="-0.75 0 0" particle-system="texture: ../assets/particle.png; color: #f70; opacity: 0.33; size: 20; maxAge: 0.64; velocityValue: 0 6.5 0; velocitySpread: 0 0 0; accelerationSpread: 2 0 2; particleCount: 2000"></a-entity>
+                    <a-entity
+                        gltf-model="#mage-model" gltf-anim="clip: Idle"
+                        rotation="90 0 0" scale="0.7 0.7 0.7">
                     </a-entity>
 
-                    <!-- Rotating text -->
-                    <a-entity animation="property: rotation.z; from: 0; to: 360; dur: 2000; loop: true; easing: linear">
-                        <a-text value="It works!" font="mozillavr" color="#fe3" scale="-1 -1 1" rotation="-90 0 0" position="0 0.40 1" align="center"></a-text>
-                        <a-text value="Cool!" font="mozillavr" color="#8ef" scale="1 1 1" rotation="90 0 0" position="0 -0.40 1" align="center"></a-text>
+                    <!-- Magic circle -->
+                    <a-plane width="4" height="4"
+                        material="src: #magic-circle; color: #beefff; side: double; shader: flat; transparent: true; opacity: 1"
+                        animation="property: object3D.rotation.z; from: 360; to: 0; dur: 4000; loop: true; easing: linear">
+                    </a-plane>
+
+                </a-entity>
+
+            </ar-root>
+
+            <!-- The cat -->
+            <ar-root reference-image="cat">
+                <a-entity rotation="-90 0 0" position="0 -0.5 0">
+                    <a-light type="ambient" intensity="1.5"></a-light>
+
+                    <a-entity
+                        gltf-model="#cat-model" gltf-anim="clip: Cheer"
+                        rotation="90 0 0" scale="0.7 0.7 0.7">
                     </a-entity>
 
-                </a-plane>
+                    <a-plane width="4" height="4"
+                        material="src: #magic-circle; color: #ffa; side: double; shader: flat; transparent: true; opacity: 1"
+                        animation="property: object3D.rotation.z; from: 360; to: 0; dur: 8000; loop: true; easing: linear">
+                    </a-plane>
 
+                    <a-entity position="0 -0.5 2">
+                        <a-plane width="3" height="1.5" rotation="90 0 0"
+                            material="src: #it-works; color: #fff; side: double; shader: flat; transparent: true; opacity: 1">
+                        </a-plane>
+                    </a-entity>
+                </a-entity>
             </ar-root>
 
             <!-- Declare external media files here -->
             <a-assets>
-                <a-asset-item id="my-3d-model" src="../assets/my-3d-model.glb"></a-asset-item>
+                <a-asset-item id="cat-model" src="../assets/cat.glb"></a-asset-item>
+                <a-asset-item id="mage-model" src="../assets/mage.glb"></a-asset-item>
+                <img id="magic-circle" src="../assets/magic-circle.png">
+                <img id="it-works" src="../assets/it-works.png">
+                <video id="my-video" hidden muted loop playsinline autoplay>
+                    <source src="../assets/my-video.webm" type="video/webm" />
+                    <source src="../assets/my-video.mp4" type="video/mp4" />
+                </video>
             </a-assets>
+
         </a-scene>
     </body>
 </html>

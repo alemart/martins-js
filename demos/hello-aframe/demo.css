@@ -8,13 +8,6 @@ body {
     padding: 0;
 }
 
-#scan {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    opacity: 0.75;
-}
-
 #about {
     position: absolute;
     right: 0;

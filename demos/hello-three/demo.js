@@ -1,6 +1,6 @@
 /**
  * Augmented Reality demo using the three.js plugin for encantar.js
- * https://alemart.github.io/encantar-js/
+ * @author Alexandre Martins <alemartf(at)gmail.com> (https://github.com/alemart/encantar-js)
  */
 
 (function() {
@@ -28,12 +28,6 @@ class DemoUtils
         return gltf;
     }
 
-    switchToFrontView(root)
-    {
-        // top view is the default
-        root.rotateX(-Math.PI / 2);
-    }
-
     createAnimationAction(gltf, name = null)
     {
         const mixer = new THREE.AnimationMixer(gltf.scene);
@@ -42,7 +36,12 @@ class DemoUtils
         if(clips.length == 0)
             throw new Error('No animation clips');
 
-        const clip = (name !== null) ? THREE.AnimationClip.findByName(clips, name) : clips[0];
+        if(name === null) {
+            const sortedNames = clips.map(clip => clip.name).sort();
+            name = sortedNames[0];
+        }
+
+        const clip = THREE.AnimationClip.findByName(clips, name);
         const action = mixer.clipAction(clip);
 
         return action;
@@ -61,6 +60,12 @@ class DemoUtils
         return mesh;
     }
 
+    switchToFrontView(ar)
+    {
+        // top view is the default
+        ar.root.rotation.set(-Math.PI / 2, 0, 0);
+    }
+
     referenceImage(ar)
     {
         if(ar.frame === null)
@@ -76,6 +81,16 @@ class DemoUtils
         }
 
         return null;
+    }
+
+    referenceImageName(ar)
+    {
+        const referenceImage = this.referenceImage(ar);
+
+        if(referenceImage === null)
+            return null;
+
+        return referenceImage.name;
     }
 }
 
@@ -109,8 +124,6 @@ class DemoScene extends ARScene
                 'User agent: ' + navigator.userAgent
             );
         }
-
-        //AR.Settings.powerPreference = 'low-power';
 
         const tracker = AR.Tracker.ImageTracker();
         await tracker.database.add([{
@@ -157,7 +170,7 @@ class DemoScene extends ARScene
 
     /**
      * Initialize the augmented scene
-     * @param {ARPluginSystem} ar
+     * @param {ARSystem} ar
      * @returns {Promise<void>}
      */
     async init(ar)
@@ -165,23 +178,20 @@ class DemoScene extends ARScene
         // Change the point of view. All virtual objects are descendants of
         // ar.root, a node that is automatically aligned to the physical scene.
         // Adjusting ar.root will adjust all virtual objects.
-        this._utils.switchToFrontView(ar.root);
+        this._utils.switchToFrontView(ar);
         ar.root.position.set(0, -0.5, 0);
         ar.root.scale.set(0.7, 0.7, 0.7);
 
-        // add lights
+        // add light
         const ambientLight = new THREE.AmbientLight(0xffffff);
+        ambientLight.intensity = 1.5;
         ar.scene.add(ambientLight);
-
-        const directionalLight = new THREE.DirectionalLight(0xffffff);
-        directionalLight.position.set(0, 0, 3);
-        ar.root.add(directionalLight);
 
         // create the magic circle
         const magicCircle = this._utils.createImagePlane('../assets/magic-circle.png');
-        magicCircle.material.transparent = true;
-        magicCircle.material.opacity = 0.85;
         magicCircle.material.color = new THREE.Color(0xbeefff);
+        magicCircle.material.transparent = true;
+        magicCircle.material.opacity = 1;
         magicCircle.scale.set(6, 6, 1);
         ar.root.add(magicCircle);
 
@@ -203,7 +213,7 @@ class DemoScene extends ARScene
 
     /**
      * Update / animate the augmented scene
-     * @param {ARPluginSystem} ar
+     * @param {ARSystem} ar
      * @returns {void}
      */
     update(ar)
@@ -219,17 +229,7 @@ class DemoScene extends ARScene
 
         // animate the magic circle
         const magicCircle = this._objects.magicCircle;
-        magicCircle.rotateZ(TWO_PI * ROTATIONS_PER_SECOND * delta);
-    }
-
-    /**
-     * Release the augmented scene
-     * @param {ARPluginSystem} ar
-     * @returns {void}
-     */
-    release(ar)
-    {
-        // nothing to do
+        magicCircle.rotateZ(-TWO_PI * ROTATIONS_PER_SECOND * delta);
     }
 }
 
@@ -242,7 +242,10 @@ class DemoScene extends ARScene
 function main()
 {
     const scene = new DemoScene();
-    encantar(scene);
+
+    encantar(scene).catch(error => {
+        alert(error.message);
+    });
 }
 
 document.addEventListener('DOMContentLoaded', main);
